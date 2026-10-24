@@ -1,0 +1,91 @@
+name: Verificacoes
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  postgres-tests:
+    name: Python 3.12 / PostgreSQL 17
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      PGHOST: 127.0.0.1
+      PGPORT: "5432"
+      PGDATABASE: loja_ci
+      PGUSER: loja_ci
+      # Credencial publica exclusiva do banco temporario deste job; nao e um segredo real.
+      PGPASSWORD: ci-app-only-not-for-deployment
+      PYTHONDONTWRITEBYTECODE: "1"
+    services:
+      postgres:
+        image: postgres:17.11-bookworm
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-bootstrap-only-not-for-deployment
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    steps:
+      - name: Obter codigo
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Preparar Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12.15"
+      - name: Instalar dependencias fixadas
+        run: python -m pip install --disable-pip-version-check -r requirements.lock
+      - name: Criar conta de testes sem superusuario
+        run: |
+          python - <<'PY'
+          import os
+          import psycopg
+          from psycopg import sql
+
+          with psycopg.connect(
+              host=os.environ["PGHOST"], port=os.environ["PGPORT"],
+              dbname="postgres", user="postgres",
+              password="ci-bootstrap-only-not-for-deployment", autocommit=True,
+          ) as bootstrap:
+              bootstrap.execute(sql.SQL(
+                  "CREATE ROLE loja_ci LOGIN CREATEDB NOSUPERUSER NOCREATEROLE "
+                  "NOREPLICATION NOBYPASSRLS PASSWORD {}"
+              ).format(sql.Literal(os.environ["PGPASSWORD"])))
+              bootstrap.execute("CREATE DATABASE loja_ci OWNER loja_ci")
+          print("Conta temporaria criada; a suite usara loja_ci, sem superusuario.")
+          PY
+      - name: Conferir dependencias e estilo
+        run: |
+          python -m pip check
+          ruff check .
+          ruff format --check .
+      - name: Conferir modelos e aplicar migrations
+        run: |
+          python manage.py check
+          python manage.py makemigrations --check --dry-run
+          python manage.py migrate --noinput
+          python manage.py migrate --check
+      - name: Executar suite com PostgreSQL real
+        run: python manage.py test tests --noinput --verbosity 2
+      - name: Validar contrato OpenAPI exportado
+        run: |
+          python manage.py spectacular --validate --fail-on-warn --file /tmp/openapi-ci.yaml
+          diff -u docs/openapi.yaml /tmp/openapi-ci.yaml
+      - name: Inspecionar arquivos publicaveis
+        run: python scripts/check_publication.py
