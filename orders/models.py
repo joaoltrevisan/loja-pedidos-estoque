@@ -48,6 +48,13 @@ class Order(TimestampedModel):
     delivered_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
+        indexes = [
+            models.Index(
+                fields=["created_at", "id"],
+                condition=models.Q(status="PENDING_PAYMENT"),
+                name="order_pending_created_idx",
+            ),
+        ]
         constraints = [
             models.CheckConstraint(
                 condition=models.Q(total__gt=0, total__lte=MAX_ORDER_TOTAL),
@@ -175,6 +182,7 @@ class SimulatedPayment(models.Model):
     is_simulated = models.BooleanField(default=True, editable=False)
 
     class Meta:
+        indexes = [models.Index(fields=["approved_at"], name="payment_approved_at_idx")]
         constraints = [
             models.CheckConstraint(
                 condition=models.Q(amount__gt=0, amount__lte=MAX_ORDER_TOTAL),

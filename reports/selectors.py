@@ -39,18 +39,22 @@ def financial_metadata(period):
     }
 
 
-def revenue_report(*, user, start, end, group_by="day"):
-    require_admin(user)
-    period = ReportPeriod(start, end)
-    if group_by not in ("day", "month"):
-        raise ValidationError({"group_by": ["Use day ou month."]})
-    daily = list(
+def daily_revenue(period):
+    return (
         paid_payments(period)
         .annotate(day=TruncDate("approved_at", tzinfo=REPORT_TZ))
         .values("day")
         .annotate(amount=Sum("amount"), paid_orders=Count("id"))
         .order_by("day")
     )
+
+
+def revenue_report(*, user, start, end, group_by="day"):
+    require_admin(user)
+    period = ReportPeriod(start, end)
+    if group_by not in ("day", "month"):
+        raise ValidationError({"group_by": ["Use day ou month."]})
+    daily = list(daily_revenue(period))
     # Ate 366 dias: preencher lacunas e reagrupar meses nao exige carregar pagamentos.
     buckets = {}
     day = start
