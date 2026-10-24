@@ -1,0 +1,468 @@
+[PRIVACIDADE: caminhos do computador foram substituidos por /workspace; resultados preservados.]
+ETAPA 4 — REGISTRO DE EXECUCAO
+Coletado em 2026-10-23T20:01:21.511267-03:00
+
+Ambiente local de desenvolvimento; pagamentos apenas simulados.
+Nenhuma medicao de desempenho. Os tempos impressos sao duracoes da execucao da suite.
+
+Ocorrencias do coletor, corrigidas antes da execucao final: docker exec precisa incluir python manage.py (a chamada apenas shell retornou 127); urllib Request usa get_method(), nao o atributo method (AttributeError no coletor). Nenhuma dessas falhas era da API. As saidas abaixo sao da execucao final.
+
+
+SUITE E CHECKS LOCAIS (verificador existente da Etapa 2, executado contra todos os testes atuais)
+Verificacao Etapa 2 — 2026-10-23T23:00:25.086168+00:00
+Python 3.12.15; Django 5.2.18; psycopg 3.3.6
+Banco real: ('PostgreSQL 17.11 on aarch64-apple-darwin25.6.0, compiled by Apple clang version 21.0.0 (clang-2100.1.1.101), 64-bit', 'loja', 'UTC')
+listen_addresses: ''
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python -m pip --disable-pip-version-check --no-cache-dir check
+No broken requirements found.
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/ruff check .
+All checks passed!
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/ruff format --check .
+65 files already formatted
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py check
+System check identified no issues (0 silenced).
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py makemigrations --check --dry-run
+No changes detected
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py migrate --noinput
+Operations to perform:
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Running migrations:
+  No migrations to apply.
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py migrate --check
+
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py test tests --noinput --verbosity 2
+Creating test database for alias 'default' ('test_loja')...
+Found 79 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: rest_framework
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying inventory.0001_initial...test_access_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_access_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone (tests.test_authentication.AuthenticationTests.test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone) ... ok
+test_customer_failure_rolls_back_registration_user (tests.test_authentication.AuthenticationTests.test_customer_failure_rolls_back_registration_user) ... ok
+test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected (tests.test_authentication.AuthenticationTests.test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected) ... ok
+test_json_only_safe_methods_and_no_production_probe_routes (tests.test_authentication.AuthenticationTests.test_json_only_safe_methods_and_no_production_probe_routes) ... ok
+test_login_accepts_normalized_email_and_issues_typed_expiring_tokens (tests.test_authentication.AuthenticationTests.test_login_accepts_normalized_email_and_issues_typed_expiring_tokens) ... ok
+test_login_invalid_unknown_and_inactive_have_same_error (tests.test_authentication.AuthenticationTests.test_login_invalid_unknown_and_inactive_have_same_error) ... ok
+test_login_rejects_extra_fields (tests.test_authentication.AuthenticationTests.test_login_rejects_extra_fields) ... ok
+test_login_uses_same_unicode_email_equivalence_as_unique_constraint (tests.test_authentication.AuthenticationTests.test_login_uses_same_unicode_email_equivalence_as_unique_constraint) ... ok
+test_malformed_user_claim_never_causes_internal_error (tests.test_authentication.AuthenticationTests.test_malformed_user_claim_never_causes_internal_error) ... ok
+test_password_whitespace_is_preserved_between_registration_and_login (tests.test_authentication.AuthenticationTests.test_password_whitespace_is_preserved_between_registration_and_login) ... ok
+test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged (tests.test_authentication.AuthenticationTests.test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged) ... ok
+test_profile_forbids_mass_assignment_and_password_changes (tests.test_authentication.AuthenticationTests.test_profile_forbids_mass_assignment_and_password_changes) ... ok
+test_profile_phone_save_failure_rolls_back_name (tests.test_authentication.AuthenticationTests.test_profile_phone_save_failure_rolls_back_name) ... ok
+test_profile_requires_access_token_and_returns_only_own_data (tests.test_authentication.AuthenticationTests.test_profile_requires_access_token_and_returns_only_own_data) ... ok
+test_profile_service_also_validates_password_and_model_fields (tests.test_authentication.AuthenticationTests.test_profile_service_also_validates_password_and_model_fields) ... ok
+test_profile_update_normalizes_email_preserves_other_user_and_can_login (tests.test_authentication.AuthenticationTests.test_profile_update_normalizes_email_preserves_other_user_and_can_login) ... ok
+test_public_endpoints_ignore_stale_authorization_header (tests.test_authentication.AuthenticationTests.test_public_endpoints_ignore_stale_authorization_header) ... ok
+test_refresh_issues_access_without_extending_original_refresh (tests.test_authentication.AuthenticationTests.test_refresh_issues_access_without_extending_original_refresh) ... ok
+test_refresh_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_refresh_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_register_creates_customer_with_hashed_password_and_no_privileges (tests.test_authentication.AuthenticationTests.test_register_creates_customer_with_hashed_password_and_no_privileges) ... ok
+test_register_rejects_duplicate_case_insensitive_email (tests.test_authentication.AuthenticationTests.test_register_rejects_duplicate_case_insensitive_email) ... ok
+test_register_rejects_privilege_and_other_protected_fields (tests.test_authentication.AuthenticationTests.test_register_rejects_privilege_and_other_protected_fields) ... ok
+test_register_rejects_weak_passwords_using_framework_validators (tests.test_authentication.AuthenticationTests.test_register_rejects_weak_passwords_using_framework_validators) ... ok
+test_register_validates_required_types_lengths_and_email (tests.test_authentication.AuthenticationTests.test_register_validates_required_types_lengths_and_email) ... ok
+test_registration_throttle_limits_attempts_and_returns_retry_after (tests.test_authentication.AuthenticationTests.test_registration_throttle_limits_attempts_and_returns_retry_after) ... ok
+test_wrong_audience_or_issuer_is_rejected (tests.test_authentication.AuthenticationTests.test_wrong_audience_or_issuer_is_rejected) ... ok
+test_credentials_are_hashed_and_only_admin_has_privileges (tests.test_demo_data.DemoDataTests.test_credentials_are_hashed_and_only_admin_has_privileges) ... ok
+test_dataset_is_reproducible_in_empty_databases (tests.test_demo_data.DemoDataTests.test_dataset_is_reproducible_in_empty_databases) ... ok
+test_failure_after_stock_change_rolls_back_entire_dataset (tests.test_demo_data.DemoDataTests.test_failure_after_stock_change_rolls_back_entire_dataset) ... ok
+test_known_counts_totals_and_balances (tests.test_demo_data.DemoDataTests.test_known_counts_totals_and_balances) ... ok
+test_order_payment_shipment_and_ledger_are_consistent (tests.test_demo_data.DemoDataTests.test_order_payment_shipment_and_ledger_are_consistent) ... ok
+test_seed_never_erases_or_duplicates_existing_data (tests.test_demo_data.DemoDataTests.test_seed_never_erases_or_duplicates_existing_data) ... ok
+test_seed_requires_explicit_enable (tests.test_demo_data.DemoDataTests.test_seed_requires_explicit_enable) ... ok
+test_seed_requires_password_without_modifying_data (tests.test_demo_data.DemoDataTests.test_seed_requires_password_without_modifying_data) ... ok
+test_database_failure_returns_503_without_details (tests.test_health.HealthTests.test_database_failure_returns_503_without_details) ... ok
+test_health_checks_real_database (tests.test_health.HealthTests.test_health_checks_real_database) ... ok
+test_probe_only_accepts_safe_methods (tests.test_health.HealthTests.test_probe_only_accepts_safe_methods) ... ok
+test_admin_privilege_removal_takes_effect_with_existing_token (tests.test_permissions.PermissionTests.test_admin_privilege_removal_takes_effect_with_existing_token) ... ok
+test_admin_reads_all_orders_without_customer_profile (tests.test_permissions.PermissionTests.test_admin_reads_all_orders_without_customer_profile) ... ok
+test_admin_with_customer_profile_still_cannot_use_customer_only_actions (tests.test_permissions.PermissionTests.test_admin_with_customer_profile_still_cannot_use_customer_only_actions) ... ok
+test_anonymous_and_missing_profile_cannot_read_orders (tests.test_permissions.PermissionTests.test_anonymous_and_missing_profile_cannot_read_orders) ... ok
+test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail (tests.test_permissions.PermissionTests.test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail) ... ok
+test_endpoint_roles_customer_admin_anonymous_and_missing_profile (tests.test_permissions.PermissionTests.test_endpoint_roles_customer_admin_anonymous_and_missing_profile) ... ok
+test_object_permission_denies_foreign_owner_independently_of_query_filter (tests.test_permissions.PermissionTests.test_object_permission_denies_foreign_owner_independently_of_query_filter) ... ok
+test_read_permission_never_grants_mutation_even_to_admin (tests.test_permissions.PermissionTests.test_read_permission_never_grants_mutation_even_to_admin) ... ok
+test_selector_denies_anonymous_inactive_and_missing_profile (tests.test_permissions.PermissionTests.test_selector_denies_anonymous_inactive_and_missing_profile) ... ok
+test_address_and_currency_constraints (tests.test_schema.SchemaTests.test_address_and_currency_constraints) ... ok
+test_customer_and_stock_are_unique (tests.test_schema.SchemaTests.test_customer_and_stock_are_unique) ... ok
+test_database_is_postgresql_and_role_is_not_superuser (tests.test_schema.SchemaTests.test_database_is_postgresql_and_role_is_not_superuser) ... ok
+test_dates_are_timezone_aware (tests.test_schema.SchemaTests.test_dates_are_timezone_aware) ... ok
+test_duplicate_reservation_and_release_rejected_but_entries_can_repeat (tests.test_schema.SchemaTests.test_duplicate_reservation_and_release_rejected_but_entries_can_repeat) ... ok
+test_email_uniqueness_ignores_case_even_without_manager (tests.test_schema.SchemaTests.test_email_uniqueness_ignores_case_even_without_manager) ... ok
+test_empty_email_and_invalid_superuser_flags_are_rejected (tests.test_schema.SchemaTests.test_empty_email_and_invalid_superuser_flags_are_rejected) ... ok
+test_every_status_and_timestamp_presence_combination (tests.test_schema.SchemaTests.test_every_status_and_timestamp_presence_combination) ... ok
+test_foreign_keys_protect_against_raw_sql_and_orphans (tests.test_schema.SchemaTests.test_foreign_keys_protect_against_raw_sql_and_orphans) ... ok
+test_fractional_and_boolean_values_are_not_truncated_by_orm (tests.test_schema.SchemaTests.test_fractional_and_boolean_values_are_not_truncated_by_orm) ... ok
+test_historical_item_values_survive_catalog_changes (tests.test_schema.SchemaTests.test_historical_item_values_survive_catalog_changes) ... ok
+test_item_quantity_bounds_and_duplicate_product (tests.test_schema.SchemaTests.test_item_quantity_bounds_and_duplicate_product) ... ok
+test_money_precision_and_limits (tests.test_schema.SchemaTests.test_money_precision_and_limits) ... ok
+test_movement_reason_and_symmetric_range (tests.test_schema.SchemaTests.test_movement_reason_and_symmetric_range) ... ok
+test_movement_sign_type_and_order_combinations (tests.test_schema.SchemaTests.test_movement_sign_type_and_order_combinations) ... ok
+test_nonpositive_and_nan_money_rejected_by_database (tests.test_schema.SchemaTests.test_nonpositive_and_nan_money_rejected_by_database) ... ok
+test_order_chronology_rejects_events_out_of_order (tests.test_schema.SchemaTests.test_order_chronology_rejects_events_out_of_order) ... ok
+test_orm_protects_historical_relationships (tests.test_schema.SchemaTests.test_orm_protects_historical_relationships) ... ok
+test_payment_one_per_order_reference_unique_and_simulation_mandatory (tests.test_schema.SchemaTests.test_payment_one_per_order_reference_unique_and_simulation_mandatory) ... ok
+test_product_sku_name_and_uniqueness (tests.test_schema.SchemaTests.test_product_sku_name_and_uniqueness) ... ok
+test_required_user_fields_at_database_level (tests.test_schema.SchemaTests.test_required_user_fields_at_database_level) ... ok
+test_shipment_unique_and_delivery_not_before_shipping (tests.test_schema.SchemaTests.test_shipment_unique_and_delivery_not_before_shipping) ... ok
+test_snapshot_fields_required (tests.test_schema.SchemaTests.test_snapshot_fields_required) ... ok
+test_stock_cannot_be_negative_but_zero_is_valid (tests.test_schema.SchemaTests.test_stock_cannot_be_negative_but_zero_is_valid) ... ok
+test_user_manager_normalizes_email_hashes_password_and_defaults_permissions (tests.test_schema.SchemaTests.test_user_manager_normalizes_email_hashes_password_and_defaults_permissions) ... ok
+test_concurrent_profile_fields_are_preserved_with_independent_connections (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_profile_fields_are_preserved_with_independent_connections) ... ok
+test_concurrent_same_email_registration_commits_one_complete_customer (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_same_email_registration_commits_one_complete_customer) ... ok
+test_existing_configuration_is_not_overwritten (tests.test_environment.EnvironmentFileTests.test_existing_configuration_is_not_overwritten) ... ok
+test_invalid_template_does_not_create_partial_file (tests.test_environment.EnvironmentFileTests.test_invalid_template_does_not_create_partial_file) ... ok
+test_secrets_are_distinct_private_and_example_is_preserved (tests.test_environment.EnvironmentFileTests.test_secrets_are_distinct_private_and_example_is_preserved) ... ok
+test_accepts_integral_values (tests.test_schema.StrictIntegerTests.test_accepts_integral_values) ... ok
+test_rejects_fractional_boolean_and_nonfinite_input (tests.test_schema.StrictIntegerTests.test_rejects_fractional_boolean_and_nonfinite_input) ... ok
+
+----------------------------------------------------------------------
+Ran 79 tests in 2.846s
+
+OK
+Destroying test database for alias 'default' ('test_loja')...
+ OK
+System check identified no issues (0 silenced).
+exit_code=0
+
+Todas as verificacoes acima terminaram com exit_code=0.
+Evidencia salva em /workspace/loja-pedidos-estoque/.local/stage2-last-verification.txt
+
+
+BUILD DOCKER FINAL
+ Image loja-stage3-20261023223148-app Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 582B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 596B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.15-slim-bookworm
+#3 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 136B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 49.83kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12.15-slim-bookworm@sha256:6a0e06f5ba0b373d051aabd3fffb9b873f27f9a2a3a14bcbe37dee6f0e3bbc70
+#6 resolve docker.io/library/python:3.12.15-slim-bookworm@sha256:6a0e06f5ba0b373d051aabd3fffb9b873f27f9a2a3a14bcbe37dee6f0e3bbc70 0.0s done
+#6 DONE 0.0s
+
+#7 [3/5] COPY requirements.lock /app/requirements.lock
+#7 CACHED
+
+#8 [2/5] WORKDIR /app
+#8 CACHED
+
+#9 [4/5] RUN python -m pip install --no-cache-dir -r requirements.lock     && groupadd --gid 10001 app     && useradd --uid 10001 --gid app --no-create-home app
+#9 CACHED
+
+#10 [5/5] COPY . /app
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers 0.0s done
+#11 exporting manifest sha256:45afb3ab9d49a18c0bee7fda27605a6a00d9d0602ecb89570db2909ebdcd891b done
+#11 exporting config sha256:bfa7171fc28172e95bb2a6bf2ba3b122d81b1492921c7b0d2b5ee5b50ed017a9 done
+#11 exporting attestation manifest sha256:40018890ad2a8640bda314e5c699f23000eb8a03bd0050b14a4bffe4ede0b770 done
+#11 exporting manifest list sha256:6e116993e208bdf238109bf7e95a8bf37d35c31d83b6569a4c7106e2a0bde317 done
+#11 naming to docker.io/library/loja-stage3-20261023223148-app:latest done
+#11 unpacking to docker.io/library/loja-stage3-20261023223148-app:latest done
+#11 DONE 0.0s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image loja-stage3-20261023223148-app Built 
+
+
+SUITE COMPLETA NA IMAGEM FINAL
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-9bd42be66129 Creating 
+ Container loja-stage3-20261023223148-app-run-9bd42be66129 Created 
+Creating test database for alias 'default' ('test_loja')...
+Found 79 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: rest_framework
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying inventory.0001_initial... OK
+System check identified no issues (0 silenced).
+test_access_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_access_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone (tests.test_authentication.AuthenticationTests.test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone) ... ok
+test_customer_failure_rolls_back_registration_user (tests.test_authentication.AuthenticationTests.test_customer_failure_rolls_back_registration_user) ... ok
+test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected (tests.test_authentication.AuthenticationTests.test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected) ... ok
+test_json_only_safe_methods_and_no_production_probe_routes (tests.test_authentication.AuthenticationTests.test_json_only_safe_methods_and_no_production_probe_routes) ... ok
+test_login_accepts_normalized_email_and_issues_typed_expiring_tokens (tests.test_authentication.AuthenticationTests.test_login_accepts_normalized_email_and_issues_typed_expiring_tokens) ... ok
+test_login_invalid_unknown_and_inactive_have_same_error (tests.test_authentication.AuthenticationTests.test_login_invalid_unknown_and_inactive_have_same_error) ... ok
+test_login_rejects_extra_fields (tests.test_authentication.AuthenticationTests.test_login_rejects_extra_fields) ... ok
+test_login_uses_same_unicode_email_equivalence_as_unique_constraint (tests.test_authentication.AuthenticationTests.test_login_uses_same_unicode_email_equivalence_as_unique_constraint) ... ok
+test_malformed_user_claim_never_causes_internal_error (tests.test_authentication.AuthenticationTests.test_malformed_user_claim_never_causes_internal_error) ... ok
+test_password_whitespace_is_preserved_between_registration_and_login (tests.test_authentication.AuthenticationTests.test_password_whitespace_is_preserved_between_registration_and_login) ... ok
+test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged (tests.test_authentication.AuthenticationTests.test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged) ... ok
+test_profile_forbids_mass_assignment_and_password_changes (tests.test_authentication.AuthenticationTests.test_profile_forbids_mass_assignment_and_password_changes) ... ok
+test_profile_phone_save_failure_rolls_back_name (tests.test_authentication.AuthenticationTests.test_profile_phone_save_failure_rolls_back_name) ... ok
+test_profile_requires_access_token_and_returns_only_own_data (tests.test_authentication.AuthenticationTests.test_profile_requires_access_token_and_returns_only_own_data) ... ok
+test_profile_service_also_validates_password_and_model_fields (tests.test_authentication.AuthenticationTests.test_profile_service_also_validates_password_and_model_fields) ... ok
+test_profile_update_normalizes_email_preserves_other_user_and_can_login (tests.test_authentication.AuthenticationTests.test_profile_update_normalizes_email_preserves_other_user_and_can_login) ... ok
+test_public_endpoints_ignore_stale_authorization_header (tests.test_authentication.AuthenticationTests.test_public_endpoints_ignore_stale_authorization_header) ... ok
+test_refresh_issues_access_without_extending_original_refresh (tests.test_authentication.AuthenticationTests.test_refresh_issues_access_without_extending_original_refresh) ... ok
+test_refresh_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_refresh_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_register_creates_customer_with_hashed_password_and_no_privileges (tests.test_authentication.AuthenticationTests.test_register_creates_customer_with_hashed_password_and_no_privileges) ... ok
+test_register_rejects_duplicate_case_insensitive_email (tests.test_authentication.AuthenticationTests.test_register_rejects_duplicate_case_insensitive_email) ... ok
+test_register_rejects_privilege_and_other_protected_fields (tests.test_authentication.AuthenticationTests.test_register_rejects_privilege_and_other_protected_fields) ... ok
+test_register_rejects_weak_passwords_using_framework_validators (tests.test_authentication.AuthenticationTests.test_register_rejects_weak_passwords_using_framework_validators) ... ok
+test_register_validates_required_types_lengths_and_email (tests.test_authentication.AuthenticationTests.test_register_validates_required_types_lengths_and_email) ... ok
+test_registration_throttle_limits_attempts_and_returns_retry_after (tests.test_authentication.AuthenticationTests.test_registration_throttle_limits_attempts_and_returns_retry_after) ... ok
+test_wrong_audience_or_issuer_is_rejected (tests.test_authentication.AuthenticationTests.test_wrong_audience_or_issuer_is_rejected) ... ok
+test_credentials_are_hashed_and_only_admin_has_privileges (tests.test_demo_data.DemoDataTests.test_credentials_are_hashed_and_only_admin_has_privileges) ... ok
+test_dataset_is_reproducible_in_empty_databases (tests.test_demo_data.DemoDataTests.test_dataset_is_reproducible_in_empty_databases) ... ok
+test_failure_after_stock_change_rolls_back_entire_dataset (tests.test_demo_data.DemoDataTests.test_failure_after_stock_change_rolls_back_entire_dataset) ... ok
+test_known_counts_totals_and_balances (tests.test_demo_data.DemoDataTests.test_known_counts_totals_and_balances) ... ok
+test_order_payment_shipment_and_ledger_are_consistent (tests.test_demo_data.DemoDataTests.test_order_payment_shipment_and_ledger_are_consistent) ... ok
+test_seed_never_erases_or_duplicates_existing_data (tests.test_demo_data.DemoDataTests.test_seed_never_erases_or_duplicates_existing_data) ... ok
+test_seed_requires_explicit_enable (tests.test_demo_data.DemoDataTests.test_seed_requires_explicit_enable) ... ok
+test_seed_requires_password_without_modifying_data (tests.test_demo_data.DemoDataTests.test_seed_requires_password_without_modifying_data) ... ok
+test_database_failure_returns_503_without_details (tests.test_health.HealthTests.test_database_failure_returns_503_without_details) ... ok
+test_health_checks_real_database (tests.test_health.HealthTests.test_health_checks_real_database) ... ok
+test_probe_only_accepts_safe_methods (tests.test_health.HealthTests.test_probe_only_accepts_safe_methods) ... ok
+test_admin_privilege_removal_takes_effect_with_existing_token (tests.test_permissions.PermissionTests.test_admin_privilege_removal_takes_effect_with_existing_token) ... ok
+test_admin_reads_all_orders_without_customer_profile (tests.test_permissions.PermissionTests.test_admin_reads_all_orders_without_customer_profile) ... ok
+test_admin_with_customer_profile_still_cannot_use_customer_only_actions (tests.test_permissions.PermissionTests.test_admin_with_customer_profile_still_cannot_use_customer_only_actions) ... ok
+test_anonymous_and_missing_profile_cannot_read_orders (tests.test_permissions.PermissionTests.test_anonymous_and_missing_profile_cannot_read_orders) ... ok
+test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail (tests.test_permissions.PermissionTests.test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail) ... ok
+test_endpoint_roles_customer_admin_anonymous_and_missing_profile (tests.test_permissions.PermissionTests.test_endpoint_roles_customer_admin_anonymous_and_missing_profile) ... ok
+test_object_permission_denies_foreign_owner_independently_of_query_filter (tests.test_permissions.PermissionTests.test_object_permission_denies_foreign_owner_independently_of_query_filter) ... ok
+test_read_permission_never_grants_mutation_even_to_admin (tests.test_permissions.PermissionTests.test_read_permission_never_grants_mutation_even_to_admin) ... ok
+test_selector_denies_anonymous_inactive_and_missing_profile (tests.test_permissions.PermissionTests.test_selector_denies_anonymous_inactive_and_missing_profile) ... ok
+test_address_and_currency_constraints (tests.test_schema.SchemaTests.test_address_and_currency_constraints) ... ok
+test_customer_and_stock_are_unique (tests.test_schema.SchemaTests.test_customer_and_stock_are_unique) ... ok
+test_database_is_postgresql_and_role_is_not_superuser (tests.test_schema.SchemaTests.test_database_is_postgresql_and_role_is_not_superuser) ... ok
+test_dates_are_timezone_aware (tests.test_schema.SchemaTests.test_dates_are_timezone_aware) ... ok
+test_duplicate_reservation_and_release_rejected_but_entries_can_repeat (tests.test_schema.SchemaTests.test_duplicate_reservation_and_release_rejected_but_entries_can_repeat) ... ok
+test_email_uniqueness_ignores_case_even_without_manager (tests.test_schema.SchemaTests.test_email_uniqueness_ignores_case_even_without_manager) ... ok
+test_empty_email_and_invalid_superuser_flags_are_rejected (tests.test_schema.SchemaTests.test_empty_email_and_invalid_superuser_flags_are_rejected) ... ok
+test_every_status_and_timestamp_presence_combination (tests.test_schema.SchemaTests.test_every_status_and_timestamp_presence_combination) ... ok
+test_foreign_keys_protect_against_raw_sql_and_orphans (tests.test_schema.SchemaTests.test_foreign_keys_protect_against_raw_sql_and_orphans) ... ok
+test_fractional_and_boolean_values_are_not_truncated_by_orm (tests.test_schema.SchemaTests.test_fractional_and_boolean_values_are_not_truncated_by_orm) ... ok
+test_historical_item_values_survive_catalog_changes (tests.test_schema.SchemaTests.test_historical_item_values_survive_catalog_changes) ... ok
+test_item_quantity_bounds_and_duplicate_product (tests.test_schema.SchemaTests.test_item_quantity_bounds_and_duplicate_product) ... ok
+test_money_precision_and_limits (tests.test_schema.SchemaTests.test_money_precision_and_limits) ... ok
+test_movement_reason_and_symmetric_range (tests.test_schema.SchemaTests.test_movement_reason_and_symmetric_range) ... ok
+test_movement_sign_type_and_order_combinations (tests.test_schema.SchemaTests.test_movement_sign_type_and_order_combinations) ... ok
+test_nonpositive_and_nan_money_rejected_by_database (tests.test_schema.SchemaTests.test_nonpositive_and_nan_money_rejected_by_database) ... ok
+test_order_chronology_rejects_events_out_of_order (tests.test_schema.SchemaTests.test_order_chronology_rejects_events_out_of_order) ... ok
+test_orm_protects_historical_relationships (tests.test_schema.SchemaTests.test_orm_protects_historical_relationships) ... ok
+test_payment_one_per_order_reference_unique_and_simulation_mandatory (tests.test_schema.SchemaTests.test_payment_one_per_order_reference_unique_and_simulation_mandatory) ... ok
+test_product_sku_name_and_uniqueness (tests.test_schema.SchemaTests.test_product_sku_name_and_uniqueness) ... ok
+test_required_user_fields_at_database_level (tests.test_schema.SchemaTests.test_required_user_fields_at_database_level) ... ok
+test_shipment_unique_and_delivery_not_before_shipping (tests.test_schema.SchemaTests.test_shipment_unique_and_delivery_not_before_shipping) ... ok
+test_snapshot_fields_required (tests.test_schema.SchemaTests.test_snapshot_fields_required) ... ok
+test_stock_cannot_be_negative_but_zero_is_valid (tests.test_schema.SchemaTests.test_stock_cannot_be_negative_but_zero_is_valid) ... ok
+test_user_manager_normalizes_email_hashes_password_and_defaults_permissions (tests.test_schema.SchemaTests.test_user_manager_normalizes_email_hashes_password_and_defaults_permissions) ... ok
+test_concurrent_profile_fields_are_preserved_with_independent_connections (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_profile_fields_are_preserved_with_independent_connections) ... ok
+test_concurrent_same_email_registration_commits_one_complete_customer (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_same_email_registration_commits_one_complete_customer) ... ok
+test_existing_configuration_is_not_overwritten (tests.test_environment.EnvironmentFileTests.test_existing_configuration_is_not_overwritten) ... ok
+test_invalid_template_does_not_create_partial_file (tests.test_environment.EnvironmentFileTests.test_invalid_template_does_not_create_partial_file) ... ok
+test_secrets_are_distinct_private_and_example_is_preserved (tests.test_environment.EnvironmentFileTests.test_secrets_are_distinct_private_and_example_is_preserved) ... ok
+test_accepts_integral_values (tests.test_schema.StrictIntegerTests.test_accepts_integral_values) ... ok
+test_rejects_fractional_boolean_and_nonfinite_input (tests.test_schema.StrictIntegerTests.test_rejects_fractional_boolean_and_nonfinite_input) ... ok
+
+----------------------------------------------------------------------
+Ran 79 tests in 6.757s
+
+OK
+Destroying test database for alias 'default' ('test_loja')...
+
+
+CHECKS DOCKER E HTTP REAL
+Verificacoes reais da Etapa 4 em Docker local. Segredos e tokens nao sao registrados.
+
+$ docker compose run --rm app check
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-815b5c514e00 Creating 
+ Container loja-stage3-20261023223148-app-run-815b5c514e00 Created 
+System check identified no issues (0 silenced).
+
+exit_code=0
+
+$ docker compose run --rm app makemigrations --check --dry-run
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-cfac48dde406 Creating 
+ Container loja-stage3-20261023223148-app-run-cfac48dde406 Created 
+No changes detected
+
+exit_code=0
+
+$ docker compose run --rm app migrate --check
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-3d94caba35c1 Creating 
+ Container loja-stage3-20261023223148-app-run-3d94caba35c1 Created 
+
+exit_code=0
+
+$ docker compose run --rm --entrypoint python app -m pip check
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-d19354d567f7 Creating 
+ Container loja-stage3-20261023223148-app-run-d19354d567f7 Created 
+No broken requirements found.
+
+exit_code=0
+
+$ docker compose run --rm --entrypoint python app -m pip freeze
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-10ff68312442 Creating 
+ Container loja-stage3-20261023223148-app-run-10ff68312442 Created 
+asgiref==3.13.0
+Django==5.2.18
+djangorestframework==3.18.3
+djangorestframework_simplejwt==5.5.1
+psycopg==3.3.6
+psycopg-binary==3.3.6
+PyJWT==2.15.1
+ruff==0.17.2
+sqlparse==0.6.0
+typing_extensions==4.16.0
+
+exit_code=0
+
+$ docker compose run --rm --entrypoint ruff app check .
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-8c6376c09f91 Creating 
+ Container loja-stage3-20261023223148-app-run-8c6376c09f91 Created 
+All checks passed!
+
+exit_code=0
+
+$ docker compose run --rm --entrypoint ruff app format --check .
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-f25ec182d0e0 Creating 
+ Container loja-stage3-20261023223148-app-run-f25ec182d0e0 Created 
+65 files already formatted
+
+exit_code=0
+
+$ docker compose ps
+NAME                               IMAGE                            COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+loja-stage3-20261023223148-app-1   loja-stage3-20261023223148-app   "python manage.py ru…"   app       29 seconds ago   Up 25 seconds (healthy)   127.0.0.1:18003->8000/tcp
+loja-stage3-20261023223148-db-1    postgres:17.11-bookworm          "docker-entrypoint.s…"   db        28 minutes ago   Up 28 minutes (healthy)   5432/tcp
+
+exit_code=0
+
+$ docker compose exec -T app python manage.py shell -c from django.db import connection
+with connection.cursor() as c:
+ c.execute('SELECT datctype FROM pg_database WHERE datname=current_database()')
+ print('POSTGRES_DATCTYPE='+c.fetchone()[0])
+12 objects imported automatically (use -v 2 for details).
+
+POSTGRES_DATCTYPE=en_US.utf8
+
+exit_code=0
+
+$ docker compose exec -T app python manage.py shell -c import hashlib; from django.core import serializers; from accounts.models import User, Customer; from catalog.models import Product; from inventory.models import Stock, StockMovement; from orders.models import Order, OrderItem, SimulatedPayment, Shipment; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); data=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); print('DOMAIN_SHA256='+hashlib.sha256(data.encode()).hexdigest())
+12 objects imported automatically (use -v 2 for details).
+
+DOMAIN_SHA256=013f437a83e0cea887b3cff4ab81939c2fb4b8d5767d6f3068f6067a43df0483
+
+exit_code=0
+
+HTTP GET /health/: 200; esperado=200; OK
+HTTP GET /api/auth/me/: 401; esperado=401; OK
+HTTP GET /api/auth/me/: 401; esperado=401; OK
+HTTP POST /api/auth/token/: 200; esperado=200; OK
+HTTP GET /api/auth/me/: 200; esperado=200; OK
+HTTP POST /api/auth/token/refresh/: 200; esperado=200; OK
+HTTP GET /api/auth/me/: 200; esperado=200; OK
+HTTP POST /api/auth/token/: 200; esperado=200; OK
+HTTP GET /api/auth/me/: 200; esperado=200; OK
+HTTP POST /api/auth/token/refresh/: 200; esperado=200; OK
+HTTP GET /api/auth/me/: 200; esperado=200; OK
+HTTP POST /api/auth/token/: 401; esperado=401; OK
+HTTP POST /api/auth/register/: 400; esperado=400; OK
+$ docker compose exec -T app python manage.py shell -c import hashlib; from django.core import serializers; from accounts.models import User, Customer; from catalog.models import Product; from inventory.models import Stock, StockMovement; from orders.models import Order, OrderItem, SimulatedPayment, Shipment; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); data=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); print('DOMAIN_SHA256='+hashlib.sha256(data.encode()).hexdigest())
+12 objects imported automatically (use -v 2 for details).
+
+DOMAIN_SHA256=013f437a83e0cea887b3cff4ab81939c2fb4b8d5767d6f3068f6067a43df0483
+
+exit_code=0
+
+
+Snapshot completo das 9 entidades identico antes/depois do HTTP. Nenhuma credencial/token registrado.
+

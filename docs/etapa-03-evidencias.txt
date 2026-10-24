@@ -1,0 +1,133 @@
+[PRIVACIDADE: caminhos do computador foram substituidos por /workspace; resultados preservados.]
+$ .venv/bin/ruff check .
+All checks passed!
+
+exit_code=0
+
+$ .venv/bin/ruff format --check .
+48 files already formatted
+
+exit_code=0
+
+$ .venv/bin/python manage.py check
+System check identified no issues (0 silenced).
+
+exit_code=0
+
+$ .venv/bin/python manage.py makemigrations --check --dry-run
+No changes detected
+
+exit_code=0
+
+$ .venv/bin/python manage.py migrate --check
+
+exit_code=0
+
+$ .venv/bin/python manage.py test tests --noinput --verbosity 2
+Found 41 test(s).
+Operations to perform:
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying inventory.0001_initial... OK
+System check identified no issues (0 silenced).
+Creating test database for alias 'default' ('test_loja')...
+test_credentials_are_hashed_and_only_admin_has_privileges (tests.test_demo_data.DemoDataTests.test_credentials_are_hashed_and_only_admin_has_privileges) ... ok
+test_dataset_is_reproducible_in_empty_databases (tests.test_demo_data.DemoDataTests.test_dataset_is_reproducible_in_empty_databases) ... ok
+test_failure_after_stock_change_rolls_back_entire_dataset (tests.test_demo_data.DemoDataTests.test_failure_after_stock_change_rolls_back_entire_dataset) ... ok
+test_known_counts_totals_and_balances (tests.test_demo_data.DemoDataTests.test_known_counts_totals_and_balances) ... ok
+test_order_payment_shipment_and_ledger_are_consistent (tests.test_demo_data.DemoDataTests.test_order_payment_shipment_and_ledger_are_consistent) ... ok
+test_seed_never_erases_or_duplicates_existing_data (tests.test_demo_data.DemoDataTests.test_seed_never_erases_or_duplicates_existing_data) ... ok
+test_seed_requires_explicit_enable (tests.test_demo_data.DemoDataTests.test_seed_requires_explicit_enable) ... ok
+test_seed_requires_password_without_modifying_data (tests.test_demo_data.DemoDataTests.test_seed_requires_password_without_modifying_data) ... ok
+test_database_failure_returns_503_without_details (tests.test_health.HealthTests.test_database_failure_returns_503_without_details) ... ok
+test_health_checks_real_database (tests.test_health.HealthTests.test_health_checks_real_database) ... ok
+test_probe_only_accepts_safe_methods (tests.test_health.HealthTests.test_probe_only_accepts_safe_methods) ... ok
+test_address_and_currency_constraints (tests.test_schema.SchemaTests.test_address_and_currency_constraints) ... ok
+test_customer_and_stock_are_unique (tests.test_schema.SchemaTests.test_customer_and_stock_are_unique) ... ok
+test_database_is_postgresql_and_role_is_not_superuser (tests.test_schema.SchemaTests.test_database_is_postgresql_and_role_is_not_superuser) ... ok
+test_dates_are_timezone_aware (tests.test_schema.SchemaTests.test_dates_are_timezone_aware) ... ok
+test_duplicate_reservation_and_release_rejected_but_entries_can_repeat (tests.test_schema.SchemaTests.test_duplicate_reservation_and_release_rejected_but_entries_can_repeat) ... ok
+test_email_uniqueness_ignores_case_even_without_manager (tests.test_schema.SchemaTests.test_email_uniqueness_ignores_case_even_without_manager) ... ok
+test_empty_email_and_invalid_superuser_flags_are_rejected (tests.test_schema.SchemaTests.test_empty_email_and_invalid_superuser_flags_are_rejected) ... ok
+test_every_status_and_timestamp_presence_combination (tests.test_schema.SchemaTests.test_every_status_and_timestamp_presence_combination) ... ok
+test_foreign_keys_protect_against_raw_sql_and_orphans (tests.test_schema.SchemaTests.test_foreign_keys_protect_against_raw_sql_and_orphans) ... ok
+test_fractional_and_boolean_values_are_not_truncated_by_orm (tests.test_schema.SchemaTests.test_fractional_and_boolean_values_are_not_truncated_by_orm) ... ok
+test_historical_item_values_survive_catalog_changes (tests.test_schema.SchemaTests.test_historical_item_values_survive_catalog_changes) ... ok
+test_item_quantity_bounds_and_duplicate_product (tests.test_schema.SchemaTests.test_item_quantity_bounds_and_duplicate_product) ... ok
+test_money_precision_and_limits (tests.test_schema.SchemaTests.test_money_precision_and_limits) ... ok
+test_movement_reason_and_symmetric_range (tests.test_schema.SchemaTests.test_movement_reason_and_symmetric_range) ... ok
+test_movement_sign_type_and_order_combinations (tests.test_schema.SchemaTests.test_movement_sign_type_and_order_combinations) ... ok
+test_nonpositive_and_nan_money_rejected_by_database (tests.test_schema.SchemaTests.test_nonpositive_and_nan_money_rejected_by_database) ... ok
+test_order_chronology_rejects_events_out_of_order (tests.test_schema.SchemaTests.test_order_chronology_rejects_events_out_of_order) ... ok
+test_orm_protects_historical_relationships (tests.test_schema.SchemaTests.test_orm_protects_historical_relationships) ... ok
+test_payment_one_per_order_reference_unique_and_simulation_mandatory (tests.test_schema.SchemaTests.test_payment_one_per_order_reference_unique_and_simulation_mandatory) ... ok
+test_product_sku_name_and_uniqueness (tests.test_schema.SchemaTests.test_product_sku_name_and_uniqueness) ... ok
+test_required_user_fields_at_database_level (tests.test_schema.SchemaTests.test_required_user_fields_at_database_level) ... ok
+test_shipment_unique_and_delivery_not_before_shipping (tests.test_schema.SchemaTests.test_shipment_unique_and_delivery_not_before_shipping) ... ok
+test_snapshot_fields_required (tests.test_schema.SchemaTests.test_snapshot_fields_required) ... ok
+test_stock_cannot_be_negative_but_zero_is_valid (tests.test_schema.SchemaTests.test_stock_cannot_be_negative_but_zero_is_valid) ... ok
+test_user_manager_normalizes_email_hashes_password_and_defaults_permissions (tests.test_schema.SchemaTests.test_user_manager_normalizes_email_hashes_password_and_defaults_permissions) ... ok
+test_existing_configuration_is_not_overwritten (tests.test_environment.EnvironmentFileTests.test_existing_configuration_is_not_overwritten) ... ok
+test_invalid_template_does_not_create_partial_file (tests.test_environment.EnvironmentFileTests.test_invalid_template_does_not_create_partial_file) ... ok
+test_secrets_are_distinct_private_and_example_is_preserved (tests.test_environment.EnvironmentFileTests.test_secrets_are_distinct_private_and_example_is_preserved) ... ok
+test_accepts_integral_values (tests.test_schema.StrictIntegerTests.test_accepts_integral_values) ... ok
+test_rejects_fractional_boolean_and_nonfinite_input (tests.test_schema.StrictIntegerTests.test_rejects_fractional_boolean_and_nonfinite_input) ... ok
+
+----------------------------------------------------------------------
+Ran 41 tests in 2.739s
+
+OK
+Destroying test database for alias 'default' ('test_loja')...
+
+exit_code=0
+
+$ .local/bin/docker-compose version
+Docker Compose version v5.6.1
+
+exit_code=0
+
+$ .local/bin/docker-compose config --quiet
+
+exit_code=0
+
+Compose: aplicacao em loopback, banco sem porta publicada e filesystem da aplicacao somente leitura conferidos. Configuracao expandida nao exibida para preservar segredos.
+
+Compose com exemplo sem segredos: rejeitado como esperado.
+
+$ /workspace/loja-pedidos-estoque/.local/postgresql/bin/psql -X -v ON_ERROR_STOP=1 -f docker/postgres/01-app-role.sql
+CREATE ROLE
+ALTER DATABASE
+
+exit_code=0
+
+Bootstrap SQL no PostgreSQL 17.11: role sem superusuario/createrole, com CREATEDB de testes, senha SCRAM e propriedade do banco conferidas.
+
+Banco e role temporarios removidos.
+
+$ .venv/bin/python manage.py seed_demo
+Dados FICTICIOS criados: 3 clientes, 3 produtos, 5 pedidos. 3 PAGAMENTOS SIMULADOS — SEM COBRANCA REAL.
+
+exit_code=0
+
+HTTP real em development: GET /health/ -> 200, {"status":"ok"}, conectado ao PostgreSQL local.
+
+Servidor HTTP de verificacao encerrado.
+
+Docker Engine ausente: build e execucao por Docker Compose ainda NAO verificados. Etapa 3 permanece com criterio de execucao dos containers pendente.

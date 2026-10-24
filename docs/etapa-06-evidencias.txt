@@ -1,0 +1,793 @@
+[PRIVACIDADE: caminhos do computador foram substituidos por /workspace; resultados preservados.]
+ETAPA 6 — REGISTRO DE EXECUCAO
+Coletado em UTC: 2026-10-24T12:49:24.508847+00:00
+
+Ambiente local de desenvolvimento; pagamentos SIMULADOS, sem cobranca real.
+Os tempos impressos sao duracoes da suite; nenhuma medicao de desempenho foi feita.
+
+
+SUITE E CHECKS LOCAIS (verificador existente da Etapa 2 executado sobre todos os testes atuais)
+Verificacao Etapa 2 — 2026-10-24T12:42:02.041563+00:00
+Python 3.12.15; Django 5.2.18; psycopg 3.3.6
+Banco real: ('PostgreSQL 17.11 on aarch64-apple-darwin25.6.0, compiled by Apple clang version 21.0.0 (clang-2100.1.1.101), 64-bit', 'loja', 'UTC')
+listen_addresses: ''
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python -m pip --disable-pip-version-check --no-cache-dir check
+No broken requirements found.
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/ruff check .
+All checks passed!
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/ruff format --check .
+85 files already formatted
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py check
+System check identified no issues (0 silenced).
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py makemigrations --check --dry-run
+No changes detected
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py migrate --noinput
+Operations to perform:
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Running migrations:
+  No migrations to apply.
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py migrate --check
+
+exit_code=0
+
+$ /workspace/loja-pedidos-estoque/.venv/bin/python manage.py test tests --noinput --verbosity 2
+Creating test database for alias 'default' ('test_loja')...
+Found 152 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: rest_framework
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying inventory.0001_initial...test_access_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_access_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone (tests.test_authentication.AuthenticationTests.test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone) ... ok
+test_customer_failure_rolls_back_registration_user (tests.test_authentication.AuthenticationTests.test_customer_failure_rolls_back_registration_user) ... ok
+test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected (tests.test_authentication.AuthenticationTests.test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected) ... ok
+test_json_only_safe_methods_and_no_production_probe_routes (tests.test_authentication.AuthenticationTests.test_json_only_safe_methods_and_no_production_probe_routes) ... ok
+test_login_accepts_normalized_email_and_issues_typed_expiring_tokens (tests.test_authentication.AuthenticationTests.test_login_accepts_normalized_email_and_issues_typed_expiring_tokens) ... ok
+test_login_invalid_unknown_and_inactive_have_same_error (tests.test_authentication.AuthenticationTests.test_login_invalid_unknown_and_inactive_have_same_error) ... ok
+test_login_rejects_extra_fields (tests.test_authentication.AuthenticationTests.test_login_rejects_extra_fields) ... ok
+test_login_uses_same_unicode_email_equivalence_as_unique_constraint (tests.test_authentication.AuthenticationTests.test_login_uses_same_unicode_email_equivalence_as_unique_constraint) ... ok
+test_malformed_user_claim_never_causes_internal_error (tests.test_authentication.AuthenticationTests.test_malformed_user_claim_never_causes_internal_error) ... ok
+test_password_whitespace_is_preserved_between_registration_and_login (tests.test_authentication.AuthenticationTests.test_password_whitespace_is_preserved_between_registration_and_login) ... ok
+test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged (tests.test_authentication.AuthenticationTests.test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged) ... ok
+test_profile_forbids_mass_assignment_and_password_changes (tests.test_authentication.AuthenticationTests.test_profile_forbids_mass_assignment_and_password_changes) ... ok
+test_profile_phone_save_failure_rolls_back_name (tests.test_authentication.AuthenticationTests.test_profile_phone_save_failure_rolls_back_name) ... ok
+test_profile_requires_access_token_and_returns_only_own_data (tests.test_authentication.AuthenticationTests.test_profile_requires_access_token_and_returns_only_own_data) ... ok
+test_profile_service_also_validates_password_and_model_fields (tests.test_authentication.AuthenticationTests.test_profile_service_also_validates_password_and_model_fields) ... ok
+test_profile_update_normalizes_email_preserves_other_user_and_can_login (tests.test_authentication.AuthenticationTests.test_profile_update_normalizes_email_preserves_other_user_and_can_login) ... ok
+test_public_endpoints_ignore_stale_authorization_header (tests.test_authentication.AuthenticationTests.test_public_endpoints_ignore_stale_authorization_header) ... ok
+test_refresh_issues_access_without_extending_original_refresh (tests.test_authentication.AuthenticationTests.test_refresh_issues_access_without_extending_original_refresh) ... ok
+test_refresh_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_refresh_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_register_creates_customer_with_hashed_password_and_no_privileges (tests.test_authentication.AuthenticationTests.test_register_creates_customer_with_hashed_password_and_no_privileges) ... ok
+test_register_rejects_duplicate_case_insensitive_email (tests.test_authentication.AuthenticationTests.test_register_rejects_duplicate_case_insensitive_email) ... ok
+test_register_rejects_privilege_and_other_protected_fields (tests.test_authentication.AuthenticationTests.test_register_rejects_privilege_and_other_protected_fields) ... ok
+test_register_rejects_weak_passwords_using_framework_validators (tests.test_authentication.AuthenticationTests.test_register_rejects_weak_passwords_using_framework_validators) ... ok
+test_register_validates_required_types_lengths_and_email (tests.test_authentication.AuthenticationTests.test_register_validates_required_types_lengths_and_email) ... ok
+test_registration_throttle_limits_attempts_and_returns_retry_after (tests.test_authentication.AuthenticationTests.test_registration_throttle_limits_attempts_and_returns_retry_after) ... ok
+test_wrong_audience_or_issuer_is_rejected (tests.test_authentication.AuthenticationTests.test_wrong_audience_or_issuer_is_rejected) ... ok
+test_credentials_are_hashed_and_only_admin_has_privileges (tests.test_demo_data.DemoDataTests.test_credentials_are_hashed_and_only_admin_has_privileges) ... ok
+test_dataset_is_reproducible_in_empty_databases (tests.test_demo_data.DemoDataTests.test_dataset_is_reproducible_in_empty_databases) ... ok
+test_failure_after_stock_change_rolls_back_entire_dataset (tests.test_demo_data.DemoDataTests.test_failure_after_stock_change_rolls_back_entire_dataset) ... ok
+test_known_counts_totals_and_balances (tests.test_demo_data.DemoDataTests.test_known_counts_totals_and_balances) ... ok
+test_lifecycle_failure_rolls_back_the_entire_dataset (tests.test_demo_data.DemoDataTests.test_lifecycle_failure_rolls_back_the_entire_dataset) ... ok
+test_order_payment_shipment_and_ledger_are_consistent (tests.test_demo_data.DemoDataTests.test_order_payment_shipment_and_ledger_are_consistent) ... ok
+test_order_service_failure_rolls_back_the_entire_dataset (tests.test_demo_data.DemoDataTests.test_order_service_failure_rolls_back_the_entire_dataset) ... ok
+test_seed_never_erases_or_duplicates_existing_data (tests.test_demo_data.DemoDataTests.test_seed_never_erases_or_duplicates_existing_data) ... ok
+test_seed_requires_explicit_enable (tests.test_demo_data.DemoDataTests.test_seed_requires_explicit_enable) ... ok
+test_seed_requires_password_without_modifying_data (tests.test_demo_data.DemoDataTests.test_seed_requires_password_without_modifying_data) ... ok
+test_database_failure_returns_503_without_details (tests.test_health.HealthTests.test_database_failure_returns_503_without_details) ... ok
+test_health_checks_real_database (tests.test_health.HealthTests.test_health_checks_real_database) ... ok
+test_probe_only_accepts_safe_methods (tests.test_health.HealthTests.test_probe_only_accepts_safe_methods) ... ok
+test_accepts_100_distinct_products (tests.test_order_creation.OrderCreationTests.test_accepts_100_distinct_products) ... ok
+test_accepts_maximum_item_quantity_when_stock_covers_it (tests.test_order_creation.OrderCreationTests.test_accepts_maximum_item_quantity_when_stock_covers_it) ... ok
+test_address_is_trimmed_and_saved_as_independent_snapshot (tests.test_order_creation.OrderCreationTests.test_address_is_trimmed_and_saved_as_independent_snapshot) ... ok
+test_address_rejects_null_and_unpaired_surrogate_characters (tests.test_order_creation.OrderCreationTests.test_address_rejects_null_and_unpaired_surrogate_characters) ... ok
+test_anonymous_admin_and_missing_profile_cannot_create (tests.test_order_creation.OrderCreationTests.test_anonymous_admin_and_missing_profile_cannot_create) ... ok
+test_catalog_changes_do_not_rewrite_old_snapshots (tests.test_order_creation.OrderCreationTests.test_catalog_changes_do_not_rewrite_old_snapshots) ... ok
+test_create_reserves_stock_uses_server_values_and_records_actor (tests.test_order_creation.OrderCreationTests.test_create_reserves_stock_uses_server_values_and_records_actor) ... ok
+test_failure_after_all_writes_rolls_back_order_items_balances_and_ledger (tests.test_order_creation.OrderCreationTests.test_failure_after_all_writes_rolls_back_order_items_balances_and_ledger) ... ok
+test_inactive_product_rejects_entire_purchase (tests.test_order_creation.OrderCreationTests.test_inactive_product_rejects_entire_purchase) ... ok
+test_input_shapes_empty_repeated_and_quantity_types_leave_no_changes (tests.test_order_creation.OrderCreationTests.test_input_shapes_empty_repeated_and_quantity_types_leave_no_changes) ... ok
+test_insufficient_stock_rejects_entire_purchase (tests.test_order_creation.OrderCreationTests.test_insufficient_stock_rejects_entire_purchase) ... ok
+test_missing_products_in_multi_item_purchase_never_reserve_partially (tests.test_order_creation.OrderCreationTests.test_missing_products_in_multi_item_purchase_never_reserve_partially) ... ok
+test_missing_stock_is_not_silently_created (tests.test_order_creation.OrderCreationTests.test_missing_stock_is_not_silently_created) ... ok
+test_multiple_products_decimal_total_and_deterministic_item_order (tests.test_order_creation.OrderCreationTests.test_multiple_products_decimal_total_and_deterministic_item_order) ... ok
+test_only_creation_is_exposed_in_this_stage_and_bad_json_is_rejected (tests.test_order_creation.OrderCreationTests.test_only_creation_is_exposed_in_this_stage_and_bad_json_is_rejected) ... ok
+test_rejects_more_than_100_lines_before_reserving (tests.test_order_creation.OrderCreationTests.test_rejects_more_than_100_lines_before_reserving) ... ok
+test_rejects_owner_price_total_status_and_privileges (tests.test_order_creation.OrderCreationTests.test_rejects_owner_price_total_status_and_privileges) ... ok
+test_rejects_protected_item_fields (tests.test_order_creation.OrderCreationTests.test_rejects_protected_item_fields) ... ok
+test_repeated_creation_is_two_orders_and_two_reservations (tests.test_order_creation.OrderCreationTests.test_repeated_creation_is_two_orders_and_two_reservations) ... ok
+test_required_address_fields_types_formats_and_limits (tests.test_order_creation.OrderCreationTests.test_required_address_fields_types_formats_and_limits) ... ok
+test_service_rechecks_current_role_even_with_stale_user_object (tests.test_order_creation.OrderCreationTests.test_service_rechecks_current_role_even_with_stale_user_object) ... ok
+test_service_revalidates_inputs_for_non_http_callers (tests.test_order_creation.OrderCreationTests.test_service_revalidates_inputs_for_non_http_callers) ... ok
+test_cancelled_order_with_missing_wrong_release_is_not_released_again (tests.test_order_integrity.OrderIntegrityTests.test_cancelled_order_with_missing_wrong_release_is_not_released_again) ... ok
+test_delivered_order_with_missing_delivery_date_is_not_repaired_on_repeat (tests.test_order_integrity.OrderIntegrityTests.test_delivered_order_with_missing_delivery_date_is_not_repaired_on_repeat) ... ok
+test_empty_items_or_wrong_total_block_payment_and_cancellation (tests.test_order_integrity.OrderIntegrityTests.test_empty_items_or_wrong_total_block_payment_and_cancellation) ... ok
+test_http_integrity_conflict_does_not_expose_internal_diagnostics (tests.test_order_integrity.OrderIntegrityTests.test_http_integrity_conflict_does_not_expose_internal_diagnostics) ... ok
+test_missing_or_mismatched_shipment_blocks_repeated_ship_and_delivery (tests.test_order_integrity.OrderIntegrityTests.test_missing_or_mismatched_shipment_blocks_repeated_ship_and_delivery) ... ok
+test_missing_wrong_quantity_wrong_actor_and_extra_reservation_are_rejected (tests.test_order_integrity.OrderIntegrityTests.test_missing_wrong_quantity_wrong_actor_and_extra_reservation_are_rejected) ... ok
+test_paid_order_missing_payment_or_with_wrong_amount_date_is_not_repaired (tests.test_order_integrity.OrderIntegrityTests.test_paid_order_missing_payment_or_with_wrong_amount_date_is_not_repaired) ... ok
+test_paid_order_with_unexpected_shipment_cannot_be_sent (tests.test_order_integrity.OrderIntegrityTests.test_paid_order_with_unexpected_shipment_cannot_be_sent) ... ok
+test_pending_order_with_payment_or_shipment_is_not_silently_repaired (tests.test_order_integrity.OrderIntegrityTests.test_pending_order_with_payment_or_shipment_is_not_silently_repaired) ... ok
+test_release_before_cancellation_is_rejected (tests.test_order_integrity.OrderIntegrityTests.test_release_before_cancellation_is_rejected) ... ok
+test_action_routes_only_accept_post_and_json_objects (tests.test_order_lifecycle.OrderLifecycleTests.test_action_routes_only_accept_post_and_json_objects) ... ok
+test_all_transitions_roll_back_when_order_save_fails (tests.test_order_lifecycle.OrderLifecycleTests.test_all_transitions_roll_back_when_order_save_fails) ... ok
+test_cancel_multiple_products_even_if_catalog_has_changed (tests.test_order_lifecycle.OrderLifecycleTests.test_cancel_multiple_products_even_if_catalog_has_changed) ... ok
+test_cancel_returns_stock_records_owner_and_repeats_without_changes (tests.test_order_lifecycle.OrderLifecycleTests.test_cancel_returns_stock_records_owner_and_repeats_without_changes) ... ok
+test_cancellation_missing_stock_signals_integrity_conflict (tests.test_order_lifecycle.OrderLifecycleTests.test_cancellation_missing_stock_signals_integrity_conflict) ... ok
+test_cancellation_overflow_is_atomic_and_does_not_discard_units (tests.test_order_lifecycle.OrderLifecycleTests.test_cancellation_overflow_is_atomic_and_does_not_discard_units) ... ok
+test_cancelled_order_rejects_payment_shipping_and_delivery (tests.test_order_lifecycle.OrderLifecycleTests.test_cancelled_order_rejects_payment_shipping_and_delivery) ... ok
+test_invalid_order_ids_are_safe_not_found_in_services (tests.test_order_lifecycle.OrderLifecycleTests.test_invalid_order_ids_are_safe_not_found_in_services) ... ok
+test_paid_shipped_and_delivered_cannot_be_cancelled (tests.test_order_lifecycle.OrderLifecycleTests.test_paid_shipped_and_delivered_cannot_be_cancelled) ... ok
+test_payment_repeat_after_shipping_and_delivery_preserves_current_state (tests.test_order_lifecycle.OrderLifecycleTests.test_payment_repeat_after_shipping_and_delivery_preserves_current_state) ... ok
+test_payment_repeat_preserves_reference_dates_and_updated_at (tests.test_order_lifecycle.OrderLifecycleTests.test_payment_repeat_preserves_reference_dates_and_updated_at) ... ok
+test_payment_uses_order_total_and_does_not_deduct_stock_twice (tests.test_order_lifecycle.OrderLifecycleTests.test_payment_uses_order_total_and_does_not_deduct_stock_twice) ... ok
+test_protected_action_fields_are_rejected_without_changes (tests.test_order_lifecycle.OrderLifecycleTests.test_protected_action_fields_are_rejected_without_changes) ... ok
+test_repeated_actions_do_not_bypass_permissions (tests.test_order_lifecycle.OrderLifecycleTests.test_repeated_actions_do_not_bypass_permissions) ... ok
+test_response_snapshot_does_not_mix_a_later_delivery (tests.test_order_lifecycle.OrderLifecycleTests.test_response_snapshot_does_not_mix_a_later_delivery) ... ok
+test_role_and_ownership_authorization_apply_to_actual_endpoints (tests.test_order_lifecycle.OrderLifecycleTests.test_role_and_ownership_authorization_apply_to_actual_endpoints) ... ok
+test_service_rechecks_admin_and_customer_roles (tests.test_order_lifecycle.OrderLifecycleTests.test_service_rechecks_admin_and_customer_roles) ... ok
+test_ship_before_payment_and_deliver_before_shipping_are_rejected (tests.test_order_lifecycle.OrderLifecycleTests.test_ship_before_payment_and_deliver_before_shipping_are_rejected) ... ok
+test_shipping_delivery_and_repeats_preserve_stock_and_dates (tests.test_order_lifecycle.OrderLifecycleTests.test_shipping_delivery_and_repeats_preserve_stock_and_dates) ... ok
+test_shipping_tracking_is_optional_but_cannot_be_replaced (tests.test_order_lifecycle.OrderLifecycleTests.test_shipping_tracking_is_optional_but_cannot_be_replaced) ... ok
+test_tracking_types_limits_null_and_surrogate_are_rejected (tests.test_order_lifecycle.OrderLifecycleTests.test_tracking_types_limits_null_and_surrogate_are_rejected) ... ok
+test_admin_privilege_removal_takes_effect_with_existing_token (tests.test_permissions.PermissionTests.test_admin_privilege_removal_takes_effect_with_existing_token) ... ok
+test_admin_reads_all_orders_without_customer_profile (tests.test_permissions.PermissionTests.test_admin_reads_all_orders_without_customer_profile) ... ok
+test_admin_with_customer_profile_still_cannot_use_customer_only_actions (tests.test_permissions.PermissionTests.test_admin_with_customer_profile_still_cannot_use_customer_only_actions) ... ok
+test_anonymous_and_missing_profile_cannot_read_orders (tests.test_permissions.PermissionTests.test_anonymous_and_missing_profile_cannot_read_orders) ... ok
+test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail (tests.test_permissions.PermissionTests.test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail) ... ok
+test_endpoint_roles_customer_admin_anonymous_and_missing_profile (tests.test_permissions.PermissionTests.test_endpoint_roles_customer_admin_anonymous_and_missing_profile) ... ok
+test_object_permission_denies_foreign_owner_independently_of_query_filter (tests.test_permissions.PermissionTests.test_object_permission_denies_foreign_owner_independently_of_query_filter) ... ok
+test_read_permission_never_grants_mutation_even_to_admin (tests.test_permissions.PermissionTests.test_read_permission_never_grants_mutation_even_to_admin) ... ok
+test_selector_denies_anonymous_inactive_and_missing_profile (tests.test_permissions.PermissionTests.test_selector_denies_anonymous_inactive_and_missing_profile) ... ok
+test_address_and_currency_constraints (tests.test_schema.SchemaTests.test_address_and_currency_constraints) ... ok
+test_customer_and_stock_are_unique (tests.test_schema.SchemaTests.test_customer_and_stock_are_unique) ... ok
+test_database_is_postgresql_and_role_is_not_superuser (tests.test_schema.SchemaTests.test_database_is_postgresql_and_role_is_not_superuser) ... ok
+test_dates_are_timezone_aware (tests.test_schema.SchemaTests.test_dates_are_timezone_aware) ... ok
+test_duplicate_reservation_and_release_rejected_but_entries_can_repeat (tests.test_schema.SchemaTests.test_duplicate_reservation_and_release_rejected_but_entries_can_repeat) ... ok
+test_email_uniqueness_ignores_case_even_without_manager (tests.test_schema.SchemaTests.test_email_uniqueness_ignores_case_even_without_manager) ... ok
+test_empty_email_and_invalid_superuser_flags_are_rejected (tests.test_schema.SchemaTests.test_empty_email_and_invalid_superuser_flags_are_rejected) ... ok
+test_every_status_and_timestamp_presence_combination (tests.test_schema.SchemaTests.test_every_status_and_timestamp_presence_combination) ... ok
+test_foreign_keys_protect_against_raw_sql_and_orphans (tests.test_schema.SchemaTests.test_foreign_keys_protect_against_raw_sql_and_orphans) ... ok
+test_fractional_and_boolean_values_are_not_truncated_by_orm (tests.test_schema.SchemaTests.test_fractional_and_boolean_values_are_not_truncated_by_orm) ... ok
+test_historical_item_values_survive_catalog_changes (tests.test_schema.SchemaTests.test_historical_item_values_survive_catalog_changes) ... ok
+test_item_quantity_bounds_and_duplicate_product (tests.test_schema.SchemaTests.test_item_quantity_bounds_and_duplicate_product) ... ok
+test_money_precision_and_limits (tests.test_schema.SchemaTests.test_money_precision_and_limits) ... ok
+test_movement_reason_and_symmetric_range (tests.test_schema.SchemaTests.test_movement_reason_and_symmetric_range) ... ok
+test_movement_sign_type_and_order_combinations (tests.test_schema.SchemaTests.test_movement_sign_type_and_order_combinations) ... ok
+test_nonpositive_and_nan_money_rejected_by_database (tests.test_schema.SchemaTests.test_nonpositive_and_nan_money_rejected_by_database) ... ok
+test_order_chronology_rejects_events_out_of_order (tests.test_schema.SchemaTests.test_order_chronology_rejects_events_out_of_order) ... ok
+test_orm_protects_historical_relationships (tests.test_schema.SchemaTests.test_orm_protects_historical_relationships) ... ok
+test_payment_one_per_order_reference_unique_and_simulation_mandatory (tests.test_schema.SchemaTests.test_payment_one_per_order_reference_unique_and_simulation_mandatory) ... ok
+test_product_sku_name_and_uniqueness (tests.test_schema.SchemaTests.test_product_sku_name_and_uniqueness) ... ok
+test_required_user_fields_at_database_level (tests.test_schema.SchemaTests.test_required_user_fields_at_database_level) ... ok
+test_shipment_unique_and_delivery_not_before_shipping (tests.test_schema.SchemaTests.test_shipment_unique_and_delivery_not_before_shipping) ... ok
+test_snapshot_fields_required (tests.test_schema.SchemaTests.test_snapshot_fields_required) ... ok
+test_stock_cannot_be_negative_but_zero_is_valid (tests.test_schema.SchemaTests.test_stock_cannot_be_negative_but_zero_is_valid) ... ok
+test_user_manager_normalizes_email_hashes_password_and_defaults_permissions (tests.test_schema.SchemaTests.test_user_manager_normalizes_email_hashes_password_and_defaults_permissions) ... ok
+test_concurrent_profile_fields_are_preserved_with_independent_connections (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_profile_fields_are_preserved_with_independent_connections) ... ok
+test_concurrent_same_email_registration_commits_one_complete_customer (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_same_email_registration_commits_one_complete_customer) ... ok
+test_existing_configuration_is_not_overwritten (tests.test_environment.EnvironmentFileTests.test_existing_configuration_is_not_overwritten) ... ok
+test_invalid_template_does_not_create_partial_file (tests.test_environment.EnvironmentFileTests.test_invalid_template_does_not_create_partial_file) ... ok
+test_secrets_are_distinct_private_and_example_is_preserved (tests.test_environment.EnvironmentFileTests.test_secrets_are_distinct_private_and_example_is_preserved) ... ok
+test_cancellation_and_waiting_new_purchase_preserve_stock_and_ledger (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_cancellation_and_waiting_new_purchase_preserve_stock_and_ledger) ... ok
+test_cancellation_first_prevents_waiting_payment (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_cancellation_first_prevents_waiting_payment) ... ok
+test_cancellation_rollback_allows_waiting_payment_without_release (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_cancellation_rollback_allows_waiting_payment_without_release) ... ok
+test_conflicting_simultaneous_tracking_is_rejected (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_conflicting_simultaneous_tracking_is_rejected) ... ok
+test_payment_first_prevents_waiting_cancellation (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_payment_first_prevents_waiting_cancellation) ... ok
+test_two_cancellations_release_only_once (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_cancellations_release_only_once) ... ok
+test_two_deliveries_keep_original_record_and_dates (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_deliveries_keep_original_record_and_dates) ... ok
+test_two_multi_product_cancellations_follow_common_product_order (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_multi_product_cancellations_follow_common_product_order) ... ok
+test_two_payment_confirmations_preserve_one_reference_and_date (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_payment_confirmations_preserve_one_reference_and_date) ... ok
+test_two_shipments_keep_original_record_and_dates (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_shipments_keep_original_record_and_dates) ... ok
+test_waiting_delivery_observes_completed_shipping (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_waiting_delivery_observes_completed_shipping) ... ok
+test_deactivation_first_rejects_waiting_purchase_without_reservation (tests.test_order_concurrency.OrderConcurrencyTests.test_deactivation_first_rejects_waiting_purchase_without_reservation) ... ok
+test_price_update_first_makes_waiting_purchase_use_new_price (tests.test_order_concurrency.OrderConcurrencyTests.test_price_update_first_makes_waiting_purchase_use_new_price) ... ok
+test_purchase_first_preserves_old_price_and_next_purchase_uses_new_price (tests.test_order_concurrency.OrderConcurrencyTests.test_purchase_first_preserves_old_price_and_next_purchase_uses_new_price) ... ok
+test_purchase_waits_on_stock_row_before_writing_reservation (tests.test_order_concurrency.OrderConcurrencyTests.test_purchase_waits_on_stock_row_before_writing_reservation) ... ok
+test_reversed_multi_product_requests_use_common_lock_order (tests.test_order_concurrency.OrderConcurrencyTests.test_reversed_multi_product_requests_use_common_lock_order) ... ok
+test_rollback_releases_locks_and_waiting_buyer_can_reserve (tests.test_order_concurrency.OrderConcurrencyTests.test_rollback_releases_locks_and_waiting_buyer_can_reserve) ... ok
+test_two_customers_dispute_last_unit_and_second_rechecks_after_wait (tests.test_order_concurrency.OrderConcurrencyTests.test_two_customers_dispute_last_unit_and_second_rechecks_after_wait) ... ok
+test_accepts_integral_values (tests.test_schema.StrictIntegerTests.test_accepts_integral_values) ... ok
+test_rejects_fractional_boolean_and_nonfinite_input (tests.test_schema.StrictIntegerTests.test_rejects_fractional_boolean_and_nonfinite_input) ... ok
+
+----------------------------------------------------------------------
+Ran 152 tests in 4.896s
+
+OK
+Destroying test database for alias 'default' ('test_loja')...
+ OK
+System check identified no issues (0 silenced).
+exit_code=0
+
+Todas as verificacoes acima terminaram com exit_code=0.
+Evidencia salva em /workspace/loja-pedidos-estoque/.local/stage2-last-verification.txt
+
+
+BUILD DOCKER FINAL
+ Image loja-stage3-20261023223148-app Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 582B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 596B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.15-slim-bookworm
+#3 DONE 1.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 136B done
+#4 DONE 0.0s
+
+#5 [1/5] FROM docker.io/library/python:3.12.15-slim-bookworm@sha256:6a0e06f5ba0b373d051aabd3fffb9b873f27f9a2a3a14bcbe37dee6f0e3bbc70
+#5 resolve docker.io/library/python:3.12.15-slim-bookworm@sha256:6a0e06f5ba0b373d051aabd3fffb9b873f27f9a2a3a14bcbe37dee6f0e3bbc70 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 170.86kB 0.0s done
+#6 DONE 0.0s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [3/5] COPY requirements.lock /app/requirements.lock
+#8 CACHED
+
+#9 [4/5] RUN python -m pip install --no-cache-dir -r requirements.lock     && groupadd --gid 10001 app     && useradd --uid 10001 --gid app --no-create-home app
+#9 CACHED
+
+#10 [5/5] COPY . /app
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers 0.0s done
+#11 exporting manifest sha256:6186651460a73234ca5f0971bf6b2486585f3bc85b7b48bac1d8dcbe3cea5bb9 done
+#11 exporting config sha256:dd0bb647f2b6a6dabc4520bf3978bcd4d098f855eaa8ad2cf1cc0ca3f34a4870 done
+#11 exporting attestation manifest sha256:a389d0baa0836f74cbf9fcc7893266bc036dcaf2ce5dbd1760cc56dd453be126 done
+#11 exporting manifest list sha256:b8f5a425034304eb49d076ebde6d1277185344ca4d9c7e6a471ac22473e3f939 done
+#11 naming to docker.io/library/loja-stage3-20261023223148-app:latest done
+#11 unpacking to docker.io/library/loja-stage3-20261023223148-app:latest 0.0s done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image loja-stage3-20261023223148-app Built 
+
+
+SUITE COMPLETA NA IMAGEM FINAL
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-5f3ad8c87cdc Creating 
+ Container loja-stage3-20261023223148-app-run-5f3ad8c87cdc Created 
+Found 152 test(s).
+Creating test database for alias 'default' ('test_loja')...
+Operations to perform:
+  Synchronize unmigrated apps: rest_framework
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying inventory.0001_initial... OK
+System check identified no issues (0 silenced).
+test_access_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_access_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone (tests.test_authentication.AuthenticationTests.test_admin_can_use_profile_without_customer_but_cannot_create_customer_via_phone) ... ok
+test_customer_failure_rolls_back_registration_user (tests.test_authentication.AuthenticationTests.test_customer_failure_rolls_back_registration_user) ... ok
+test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected (tests.test_authentication.AuthenticationTests.test_invalid_expired_tampered_and_wrong_kind_tokens_are_rejected) ... ok
+test_json_only_safe_methods_and_no_production_probe_routes (tests.test_authentication.AuthenticationTests.test_json_only_safe_methods_and_no_production_probe_routes) ... ok
+test_login_accepts_normalized_email_and_issues_typed_expiring_tokens (tests.test_authentication.AuthenticationTests.test_login_accepts_normalized_email_and_issues_typed_expiring_tokens) ... ok
+test_login_invalid_unknown_and_inactive_have_same_error (tests.test_authentication.AuthenticationTests.test_login_invalid_unknown_and_inactive_have_same_error) ... ok
+test_login_rejects_extra_fields (tests.test_authentication.AuthenticationTests.test_login_rejects_extra_fields) ... ok
+test_login_uses_same_unicode_email_equivalence_as_unique_constraint (tests.test_authentication.AuthenticationTests.test_login_uses_same_unicode_email_equivalence_as_unique_constraint) ... ok
+test_malformed_user_claim_never_causes_internal_error (tests.test_authentication.AuthenticationTests.test_malformed_user_claim_never_causes_internal_error) ... ok
+test_password_whitespace_is_preserved_between_registration_and_login (tests.test_authentication.AuthenticationTests.test_password_whitespace_is_preserved_between_registration_and_login) ... ok
+test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged (tests.test_authentication.AuthenticationTests.test_profile_duplicate_email_and_invalid_fields_leave_all_fields_unchanged) ... ok
+test_profile_forbids_mass_assignment_and_password_changes (tests.test_authentication.AuthenticationTests.test_profile_forbids_mass_assignment_and_password_changes) ... ok
+test_profile_phone_save_failure_rolls_back_name (tests.test_authentication.AuthenticationTests.test_profile_phone_save_failure_rolls_back_name) ... ok
+test_profile_requires_access_token_and_returns_only_own_data (tests.test_authentication.AuthenticationTests.test_profile_requires_access_token_and_returns_only_own_data) ... ok
+test_profile_service_also_validates_password_and_model_fields (tests.test_authentication.AuthenticationTests.test_profile_service_also_validates_password_and_model_fields) ... ok
+test_profile_update_normalizes_email_preserves_other_user_and_can_login (tests.test_authentication.AuthenticationTests.test_profile_update_normalizes_email_preserves_other_user_and_can_login) ... ok
+test_public_endpoints_ignore_stale_authorization_header (tests.test_authentication.AuthenticationTests.test_public_endpoints_ignore_stale_authorization_header) ... ok
+test_refresh_issues_access_without_extending_original_refresh (tests.test_authentication.AuthenticationTests.test_refresh_issues_access_without_extending_original_refresh) ... ok
+test_refresh_rejects_inactive_deleted_user_and_changed_password (tests.test_authentication.AuthenticationTests.test_refresh_rejects_inactive_deleted_user_and_changed_password) ... ok
+test_register_creates_customer_with_hashed_password_and_no_privileges (tests.test_authentication.AuthenticationTests.test_register_creates_customer_with_hashed_password_and_no_privileges) ... ok
+test_register_rejects_duplicate_case_insensitive_email (tests.test_authentication.AuthenticationTests.test_register_rejects_duplicate_case_insensitive_email) ... ok
+test_register_rejects_privilege_and_other_protected_fields (tests.test_authentication.AuthenticationTests.test_register_rejects_privilege_and_other_protected_fields) ... ok
+test_register_rejects_weak_passwords_using_framework_validators (tests.test_authentication.AuthenticationTests.test_register_rejects_weak_passwords_using_framework_validators) ... ok
+test_register_validates_required_types_lengths_and_email (tests.test_authentication.AuthenticationTests.test_register_validates_required_types_lengths_and_email) ... ok
+test_registration_throttle_limits_attempts_and_returns_retry_after (tests.test_authentication.AuthenticationTests.test_registration_throttle_limits_attempts_and_returns_retry_after) ... ok
+test_wrong_audience_or_issuer_is_rejected (tests.test_authentication.AuthenticationTests.test_wrong_audience_or_issuer_is_rejected) ... ok
+test_credentials_are_hashed_and_only_admin_has_privileges (tests.test_demo_data.DemoDataTests.test_credentials_are_hashed_and_only_admin_has_privileges) ... ok
+test_dataset_is_reproducible_in_empty_databases (tests.test_demo_data.DemoDataTests.test_dataset_is_reproducible_in_empty_databases) ... ok
+test_failure_after_stock_change_rolls_back_entire_dataset (tests.test_demo_data.DemoDataTests.test_failure_after_stock_change_rolls_back_entire_dataset) ... ok
+test_known_counts_totals_and_balances (tests.test_demo_data.DemoDataTests.test_known_counts_totals_and_balances) ... ok
+test_lifecycle_failure_rolls_back_the_entire_dataset (tests.test_demo_data.DemoDataTests.test_lifecycle_failure_rolls_back_the_entire_dataset) ... ok
+test_order_payment_shipment_and_ledger_are_consistent (tests.test_demo_data.DemoDataTests.test_order_payment_shipment_and_ledger_are_consistent) ... ok
+test_order_service_failure_rolls_back_the_entire_dataset (tests.test_demo_data.DemoDataTests.test_order_service_failure_rolls_back_the_entire_dataset) ... ok
+test_seed_never_erases_or_duplicates_existing_data (tests.test_demo_data.DemoDataTests.test_seed_never_erases_or_duplicates_existing_data) ... ok
+test_seed_requires_explicit_enable (tests.test_demo_data.DemoDataTests.test_seed_requires_explicit_enable) ... ok
+test_seed_requires_password_without_modifying_data (tests.test_demo_data.DemoDataTests.test_seed_requires_password_without_modifying_data) ... ok
+test_database_failure_returns_503_without_details (tests.test_health.HealthTests.test_database_failure_returns_503_without_details) ... ok
+test_health_checks_real_database (tests.test_health.HealthTests.test_health_checks_real_database) ... ok
+test_probe_only_accepts_safe_methods (tests.test_health.HealthTests.test_probe_only_accepts_safe_methods) ... ok
+test_accepts_100_distinct_products (tests.test_order_creation.OrderCreationTests.test_accepts_100_distinct_products) ... ok
+test_accepts_maximum_item_quantity_when_stock_covers_it (tests.test_order_creation.OrderCreationTests.test_accepts_maximum_item_quantity_when_stock_covers_it) ... ok
+test_address_is_trimmed_and_saved_as_independent_snapshot (tests.test_order_creation.OrderCreationTests.test_address_is_trimmed_and_saved_as_independent_snapshot) ... ok
+test_address_rejects_null_and_unpaired_surrogate_characters (tests.test_order_creation.OrderCreationTests.test_address_rejects_null_and_unpaired_surrogate_characters) ... ok
+test_anonymous_admin_and_missing_profile_cannot_create (tests.test_order_creation.OrderCreationTests.test_anonymous_admin_and_missing_profile_cannot_create) ... ok
+test_catalog_changes_do_not_rewrite_old_snapshots (tests.test_order_creation.OrderCreationTests.test_catalog_changes_do_not_rewrite_old_snapshots) ... ok
+test_create_reserves_stock_uses_server_values_and_records_actor (tests.test_order_creation.OrderCreationTests.test_create_reserves_stock_uses_server_values_and_records_actor) ... ok
+test_failure_after_all_writes_rolls_back_order_items_balances_and_ledger (tests.test_order_creation.OrderCreationTests.test_failure_after_all_writes_rolls_back_order_items_balances_and_ledger) ... ok
+test_inactive_product_rejects_entire_purchase (tests.test_order_creation.OrderCreationTests.test_inactive_product_rejects_entire_purchase) ... ok
+test_input_shapes_empty_repeated_and_quantity_types_leave_no_changes (tests.test_order_creation.OrderCreationTests.test_input_shapes_empty_repeated_and_quantity_types_leave_no_changes) ... ok
+test_insufficient_stock_rejects_entire_purchase (tests.test_order_creation.OrderCreationTests.test_insufficient_stock_rejects_entire_purchase) ... ok
+test_missing_products_in_multi_item_purchase_never_reserve_partially (tests.test_order_creation.OrderCreationTests.test_missing_products_in_multi_item_purchase_never_reserve_partially) ... ok
+test_missing_stock_is_not_silently_created (tests.test_order_creation.OrderCreationTests.test_missing_stock_is_not_silently_created) ... ok
+test_multiple_products_decimal_total_and_deterministic_item_order (tests.test_order_creation.OrderCreationTests.test_multiple_products_decimal_total_and_deterministic_item_order) ... ok
+test_only_creation_is_exposed_in_this_stage_and_bad_json_is_rejected (tests.test_order_creation.OrderCreationTests.test_only_creation_is_exposed_in_this_stage_and_bad_json_is_rejected) ... ok
+test_rejects_more_than_100_lines_before_reserving (tests.test_order_creation.OrderCreationTests.test_rejects_more_than_100_lines_before_reserving) ... ok
+test_rejects_owner_price_total_status_and_privileges (tests.test_order_creation.OrderCreationTests.test_rejects_owner_price_total_status_and_privileges) ... ok
+test_rejects_protected_item_fields (tests.test_order_creation.OrderCreationTests.test_rejects_protected_item_fields) ... ok
+test_repeated_creation_is_two_orders_and_two_reservations (tests.test_order_creation.OrderCreationTests.test_repeated_creation_is_two_orders_and_two_reservations) ... ok
+test_required_address_fields_types_formats_and_limits (tests.test_order_creation.OrderCreationTests.test_required_address_fields_types_formats_and_limits) ... ok
+test_service_rechecks_current_role_even_with_stale_user_object (tests.test_order_creation.OrderCreationTests.test_service_rechecks_current_role_even_with_stale_user_object) ... ok
+test_service_revalidates_inputs_for_non_http_callers (tests.test_order_creation.OrderCreationTests.test_service_revalidates_inputs_for_non_http_callers) ... ok
+test_cancelled_order_with_missing_wrong_release_is_not_released_again (tests.test_order_integrity.OrderIntegrityTests.test_cancelled_order_with_missing_wrong_release_is_not_released_again) ... ok
+test_delivered_order_with_missing_delivery_date_is_not_repaired_on_repeat (tests.test_order_integrity.OrderIntegrityTests.test_delivered_order_with_missing_delivery_date_is_not_repaired_on_repeat) ... ok
+test_empty_items_or_wrong_total_block_payment_and_cancellation (tests.test_order_integrity.OrderIntegrityTests.test_empty_items_or_wrong_total_block_payment_and_cancellation) ... ok
+test_http_integrity_conflict_does_not_expose_internal_diagnostics (tests.test_order_integrity.OrderIntegrityTests.test_http_integrity_conflict_does_not_expose_internal_diagnostics) ... ok
+test_missing_or_mismatched_shipment_blocks_repeated_ship_and_delivery (tests.test_order_integrity.OrderIntegrityTests.test_missing_or_mismatched_shipment_blocks_repeated_ship_and_delivery) ... ok
+test_missing_wrong_quantity_wrong_actor_and_extra_reservation_are_rejected (tests.test_order_integrity.OrderIntegrityTests.test_missing_wrong_quantity_wrong_actor_and_extra_reservation_are_rejected) ... ok
+test_paid_order_missing_payment_or_with_wrong_amount_date_is_not_repaired (tests.test_order_integrity.OrderIntegrityTests.test_paid_order_missing_payment_or_with_wrong_amount_date_is_not_repaired) ... ok
+test_paid_order_with_unexpected_shipment_cannot_be_sent (tests.test_order_integrity.OrderIntegrityTests.test_paid_order_with_unexpected_shipment_cannot_be_sent) ... ok
+test_pending_order_with_payment_or_shipment_is_not_silently_repaired (tests.test_order_integrity.OrderIntegrityTests.test_pending_order_with_payment_or_shipment_is_not_silently_repaired) ... ok
+test_release_before_cancellation_is_rejected (tests.test_order_integrity.OrderIntegrityTests.test_release_before_cancellation_is_rejected) ... ok
+test_action_routes_only_accept_post_and_json_objects (tests.test_order_lifecycle.OrderLifecycleTests.test_action_routes_only_accept_post_and_json_objects) ... ok
+test_all_transitions_roll_back_when_order_save_fails (tests.test_order_lifecycle.OrderLifecycleTests.test_all_transitions_roll_back_when_order_save_fails) ... ok
+test_cancel_multiple_products_even_if_catalog_has_changed (tests.test_order_lifecycle.OrderLifecycleTests.test_cancel_multiple_products_even_if_catalog_has_changed) ... ok
+test_cancel_returns_stock_records_owner_and_repeats_without_changes (tests.test_order_lifecycle.OrderLifecycleTests.test_cancel_returns_stock_records_owner_and_repeats_without_changes) ... ok
+test_cancellation_missing_stock_signals_integrity_conflict (tests.test_order_lifecycle.OrderLifecycleTests.test_cancellation_missing_stock_signals_integrity_conflict) ... ok
+test_cancellation_overflow_is_atomic_and_does_not_discard_units (tests.test_order_lifecycle.OrderLifecycleTests.test_cancellation_overflow_is_atomic_and_does_not_discard_units) ... ok
+test_cancelled_order_rejects_payment_shipping_and_delivery (tests.test_order_lifecycle.OrderLifecycleTests.test_cancelled_order_rejects_payment_shipping_and_delivery) ... ok
+test_invalid_order_ids_are_safe_not_found_in_services (tests.test_order_lifecycle.OrderLifecycleTests.test_invalid_order_ids_are_safe_not_found_in_services) ... ok
+test_paid_shipped_and_delivered_cannot_be_cancelled (tests.test_order_lifecycle.OrderLifecycleTests.test_paid_shipped_and_delivered_cannot_be_cancelled) ... ok
+test_payment_repeat_after_shipping_and_delivery_preserves_current_state (tests.test_order_lifecycle.OrderLifecycleTests.test_payment_repeat_after_shipping_and_delivery_preserves_current_state) ... ok
+test_payment_repeat_preserves_reference_dates_and_updated_at (tests.test_order_lifecycle.OrderLifecycleTests.test_payment_repeat_preserves_reference_dates_and_updated_at) ... ok
+test_payment_uses_order_total_and_does_not_deduct_stock_twice (tests.test_order_lifecycle.OrderLifecycleTests.test_payment_uses_order_total_and_does_not_deduct_stock_twice) ... ok
+test_protected_action_fields_are_rejected_without_changes (tests.test_order_lifecycle.OrderLifecycleTests.test_protected_action_fields_are_rejected_without_changes) ... ok
+test_repeated_actions_do_not_bypass_permissions (tests.test_order_lifecycle.OrderLifecycleTests.test_repeated_actions_do_not_bypass_permissions) ... ok
+test_response_snapshot_does_not_mix_a_later_delivery (tests.test_order_lifecycle.OrderLifecycleTests.test_response_snapshot_does_not_mix_a_later_delivery) ... ok
+test_role_and_ownership_authorization_apply_to_actual_endpoints (tests.test_order_lifecycle.OrderLifecycleTests.test_role_and_ownership_authorization_apply_to_actual_endpoints) ... ok
+test_service_rechecks_admin_and_customer_roles (tests.test_order_lifecycle.OrderLifecycleTests.test_service_rechecks_admin_and_customer_roles) ... ok
+test_ship_before_payment_and_deliver_before_shipping_are_rejected (tests.test_order_lifecycle.OrderLifecycleTests.test_ship_before_payment_and_deliver_before_shipping_are_rejected) ... ok
+test_shipping_delivery_and_repeats_preserve_stock_and_dates (tests.test_order_lifecycle.OrderLifecycleTests.test_shipping_delivery_and_repeats_preserve_stock_and_dates) ... ok
+test_shipping_tracking_is_optional_but_cannot_be_replaced (tests.test_order_lifecycle.OrderLifecycleTests.test_shipping_tracking_is_optional_but_cannot_be_replaced) ... ok
+test_tracking_types_limits_null_and_surrogate_are_rejected (tests.test_order_lifecycle.OrderLifecycleTests.test_tracking_types_limits_null_and_surrogate_are_rejected) ... ok
+test_admin_privilege_removal_takes_effect_with_existing_token (tests.test_permissions.PermissionTests.test_admin_privilege_removal_takes_effect_with_existing_token) ... ok
+test_admin_reads_all_orders_without_customer_profile (tests.test_permissions.PermissionTests.test_admin_reads_all_orders_without_customer_profile) ... ok
+test_admin_with_customer_profile_still_cannot_use_customer_only_actions (tests.test_permissions.PermissionTests.test_admin_with_customer_profile_still_cannot_use_customer_only_actions) ... ok
+test_anonymous_and_missing_profile_cannot_read_orders (tests.test_permissions.PermissionTests.test_anonymous_and_missing_profile_cannot_read_orders) ... ok
+test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail (tests.test_permissions.PermissionTests.test_customer_lists_only_own_orders_and_cannot_discover_foreign_detail) ... ok
+test_endpoint_roles_customer_admin_anonymous_and_missing_profile (tests.test_permissions.PermissionTests.test_endpoint_roles_customer_admin_anonymous_and_missing_profile) ... ok
+test_object_permission_denies_foreign_owner_independently_of_query_filter (tests.test_permissions.PermissionTests.test_object_permission_denies_foreign_owner_independently_of_query_filter) ... ok
+test_read_permission_never_grants_mutation_even_to_admin (tests.test_permissions.PermissionTests.test_read_permission_never_grants_mutation_even_to_admin) ... ok
+test_selector_denies_anonymous_inactive_and_missing_profile (tests.test_permissions.PermissionTests.test_selector_denies_anonymous_inactive_and_missing_profile) ... ok
+test_address_and_currency_constraints (tests.test_schema.SchemaTests.test_address_and_currency_constraints) ... ok
+test_customer_and_stock_are_unique (tests.test_schema.SchemaTests.test_customer_and_stock_are_unique) ... ok
+test_database_is_postgresql_and_role_is_not_superuser (tests.test_schema.SchemaTests.test_database_is_postgresql_and_role_is_not_superuser) ... ok
+test_dates_are_timezone_aware (tests.test_schema.SchemaTests.test_dates_are_timezone_aware) ... ok
+test_duplicate_reservation_and_release_rejected_but_entries_can_repeat (tests.test_schema.SchemaTests.test_duplicate_reservation_and_release_rejected_but_entries_can_repeat) ... ok
+test_email_uniqueness_ignores_case_even_without_manager (tests.test_schema.SchemaTests.test_email_uniqueness_ignores_case_even_without_manager) ... ok
+test_empty_email_and_invalid_superuser_flags_are_rejected (tests.test_schema.SchemaTests.test_empty_email_and_invalid_superuser_flags_are_rejected) ... ok
+test_every_status_and_timestamp_presence_combination (tests.test_schema.SchemaTests.test_every_status_and_timestamp_presence_combination) ... ok
+test_foreign_keys_protect_against_raw_sql_and_orphans (tests.test_schema.SchemaTests.test_foreign_keys_protect_against_raw_sql_and_orphans) ... ok
+test_fractional_and_boolean_values_are_not_truncated_by_orm (tests.test_schema.SchemaTests.test_fractional_and_boolean_values_are_not_truncated_by_orm) ... ok
+test_historical_item_values_survive_catalog_changes (tests.test_schema.SchemaTests.test_historical_item_values_survive_catalog_changes) ... ok
+test_item_quantity_bounds_and_duplicate_product (tests.test_schema.SchemaTests.test_item_quantity_bounds_and_duplicate_product) ... ok
+test_money_precision_and_limits (tests.test_schema.SchemaTests.test_money_precision_and_limits) ... ok
+test_movement_reason_and_symmetric_range (tests.test_schema.SchemaTests.test_movement_reason_and_symmetric_range) ... ok
+test_movement_sign_type_and_order_combinations (tests.test_schema.SchemaTests.test_movement_sign_type_and_order_combinations) ... ok
+test_nonpositive_and_nan_money_rejected_by_database (tests.test_schema.SchemaTests.test_nonpositive_and_nan_money_rejected_by_database) ... ok
+test_order_chronology_rejects_events_out_of_order (tests.test_schema.SchemaTests.test_order_chronology_rejects_events_out_of_order) ... ok
+test_orm_protects_historical_relationships (tests.test_schema.SchemaTests.test_orm_protects_historical_relationships) ... ok
+test_payment_one_per_order_reference_unique_and_simulation_mandatory (tests.test_schema.SchemaTests.test_payment_one_per_order_reference_unique_and_simulation_mandatory) ... ok
+test_product_sku_name_and_uniqueness (tests.test_schema.SchemaTests.test_product_sku_name_and_uniqueness) ... ok
+test_required_user_fields_at_database_level (tests.test_schema.SchemaTests.test_required_user_fields_at_database_level) ... ok
+test_shipment_unique_and_delivery_not_before_shipping (tests.test_schema.SchemaTests.test_shipment_unique_and_delivery_not_before_shipping) ... ok
+test_snapshot_fields_required (tests.test_schema.SchemaTests.test_snapshot_fields_required) ... ok
+test_stock_cannot_be_negative_but_zero_is_valid (tests.test_schema.SchemaTests.test_stock_cannot_be_negative_but_zero_is_valid) ... ok
+test_user_manager_normalizes_email_hashes_password_and_defaults_permissions (tests.test_schema.SchemaTests.test_user_manager_normalizes_email_hashes_password_and_defaults_permissions) ... ok
+test_concurrent_profile_fields_are_preserved_with_independent_connections (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_profile_fields_are_preserved_with_independent_connections) ... ok
+test_concurrent_same_email_registration_commits_one_complete_customer (tests.test_account_concurrency.AccountConcurrencyTests.test_concurrent_same_email_registration_commits_one_complete_customer) ... ok
+test_existing_configuration_is_not_overwritten (tests.test_environment.EnvironmentFileTests.test_existing_configuration_is_not_overwritten) ... ok
+test_invalid_template_does_not_create_partial_file (tests.test_environment.EnvironmentFileTests.test_invalid_template_does_not_create_partial_file) ... ok
+test_secrets_are_distinct_private_and_example_is_preserved (tests.test_environment.EnvironmentFileTests.test_secrets_are_distinct_private_and_example_is_preserved) ... ok
+test_cancellation_and_waiting_new_purchase_preserve_stock_and_ledger (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_cancellation_and_waiting_new_purchase_preserve_stock_and_ledger) ... ok
+test_cancellation_first_prevents_waiting_payment (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_cancellation_first_prevents_waiting_payment) ... ok
+test_cancellation_rollback_allows_waiting_payment_without_release (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_cancellation_rollback_allows_waiting_payment_without_release) ... ok
+test_conflicting_simultaneous_tracking_is_rejected (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_conflicting_simultaneous_tracking_is_rejected) ... ok
+test_payment_first_prevents_waiting_cancellation (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_payment_first_prevents_waiting_cancellation) ... ok
+test_two_cancellations_release_only_once (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_cancellations_release_only_once) ... ok
+test_two_deliveries_keep_original_record_and_dates (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_deliveries_keep_original_record_and_dates) ... ok
+test_two_multi_product_cancellations_follow_common_product_order (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_multi_product_cancellations_follow_common_product_order) ... ok
+test_two_payment_confirmations_preserve_one_reference_and_date (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_payment_confirmations_preserve_one_reference_and_date) ... ok
+test_two_shipments_keep_original_record_and_dates (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_two_shipments_keep_original_record_and_dates) ... ok
+test_waiting_delivery_observes_completed_shipping (tests.test_lifecycle_concurrency.LifecycleConcurrencyTests.test_waiting_delivery_observes_completed_shipping) ... ok
+test_deactivation_first_rejects_waiting_purchase_without_reservation (tests.test_order_concurrency.OrderConcurrencyTests.test_deactivation_first_rejects_waiting_purchase_without_reservation) ... ok
+test_price_update_first_makes_waiting_purchase_use_new_price (tests.test_order_concurrency.OrderConcurrencyTests.test_price_update_first_makes_waiting_purchase_use_new_price) ... ok
+test_purchase_first_preserves_old_price_and_next_purchase_uses_new_price (tests.test_order_concurrency.OrderConcurrencyTests.test_purchase_first_preserves_old_price_and_next_purchase_uses_new_price) ... ok
+test_purchase_waits_on_stock_row_before_writing_reservation (tests.test_order_concurrency.OrderConcurrencyTests.test_purchase_waits_on_stock_row_before_writing_reservation) ... ok
+test_reversed_multi_product_requests_use_common_lock_order (tests.test_order_concurrency.OrderConcurrencyTests.test_reversed_multi_product_requests_use_common_lock_order) ... ok
+test_rollback_releases_locks_and_waiting_buyer_can_reserve (tests.test_order_concurrency.OrderConcurrencyTests.test_rollback_releases_locks_and_waiting_buyer_can_reserve) ... ok
+test_two_customers_dispute_last_unit_and_second_rechecks_after_wait (tests.test_order_concurrency.OrderConcurrencyTests.test_two_customers_dispute_last_unit_and_second_rechecks_after_wait) ... ok
+test_accepts_integral_values (tests.test_schema.StrictIntegerTests.test_accepts_integral_values) ... ok
+test_rejects_fractional_boolean_and_nonfinite_input (tests.test_schema.StrictIntegerTests.test_rejects_fractional_boolean_and_nonfinite_input) ... ok
+
+----------------------------------------------------------------------
+Ran 152 tests in 9.693s
+
+OK
+Destroying test database for alias 'default' ('test_loja')...
+
+
+CHECKS DOCKER E HTTP REAL EM BANCO TEMPORARIO
+Etapa 6: verificacao real em Docker e HTTP. Nenhum segredo/token e registrado.
+$ docker compose run --rm app check
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-23fb2dfe4140 Creating 
+ Container loja-stage3-20261023223148-app-run-23fb2dfe4140 Created 
+System check identified no issues (0 silenced).
+exit_code=0
+
+$ docker compose run --rm app makemigrations --check --dry-run
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-1f6aa3aecb02 Creating 
+ Container loja-stage3-20261023223148-app-run-1f6aa3aecb02 Created 
+No changes detected
+exit_code=0
+
+$ docker compose run --rm app migrate --check
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-dd8d53868b2c Creating 
+ Container loja-stage3-20261023223148-app-run-dd8d53868b2c Created 
+exit_code=0
+
+$ docker compose run --rm --entrypoint python app -m pip check
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-3d473aa42371 Creating 
+ Container loja-stage3-20261023223148-app-run-3d473aa42371 Created 
+No broken requirements found.
+exit_code=0
+
+$ docker compose run --rm --entrypoint ruff app check .
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-24451d8e1b83 Creating 
+ Container loja-stage3-20261023223148-app-run-24451d8e1b83 Created 
+All checks passed!
+exit_code=0
+
+$ docker compose run --rm --entrypoint ruff app format --check .
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-e54444d9cb57 Creating 
+ Container loja-stage3-20261023223148-app-run-e54444d9cb57 Created 
+85 files already formatted
+exit_code=0
+
+$ docker compose ps
+NAME                               IMAGE                            COMMAND                  SERVICE   CREATED              STATUS                        PORTS
+loja-stage3-20261023223148-app-1   loja-stage3-20261023223148-app   "python manage.py ru…"   app       About a minute ago   Up About a minute (healthy)   127.0.0.1:18003->8000/tcp
+loja-stage3-20261023223148-db-1    postgres:17.11-bookworm          "docker-entrypoint.s…"   db        14 hours ago         Up 14 hours (healthy)         5432/tcp
+exit_code=0
+
+$ docker compose exec -T app python manage.py shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "013f437a83e0cea887b3cff4ab81939c2fb4b8d5767d6f3068f6067a43df0483", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 11, "Order": 5, "OrderItem": 7, "SimulatedPayment": 3, "Shipment": 2}, "stocks": {"DEMO-CADERNO": 26, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+$ docker compose run --rm app shell -c from django.db import connection; cursor=connection.cursor(); cursor.execute('CREATE DATABASE '+connection.ops.quote_name('loja_stage6_http_20261024124449')); cursor.close()
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-71aaa640eb8c Creating 
+ Container loja-stage3-20261023223148-app-run-71aaa640eb8c Created 
+12 objects imported automatically (use -v 2 for details).
+
+exit_code=0
+
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app migrate --noinput
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-d835ca8d7dac Creating 
+ Container loja-stage3-20261023223148-app-run-d835ca8d7dac Created 
+Operations to perform:
+  Apply all migrations: accounts, auth, catalog, contenttypes, inventory, orders
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying inventory.0001_initial... OK
+exit_code=0
+
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 -e ENABLE_DEMO_DATA=true app seed_demo
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-16147c66c47a Creating 
+ Container loja-stage3-20261023223148-app-run-16147c66c47a Created 
+Dados FICTICIOS criados: 3 clientes, 3 produtos, 5 pedidos. 3 PAGAMENTOS SIMULADOS — SEM COBRANCA REAL.
+exit_code=0
+
+$ docker compose run -d --rm --name loja-stage6-http-20261024124449 -p 127.0.0.1:18005:8000 -e PGDATABASE=loja_stage6_http_20261024124449 app
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage6-http-20261024124449 Creating 
+ Container loja-stage6-http-20261024124449 Created 
+9aeee245b5131cc331f12e46e969f439624de2932017befd6edea1eaa90bb4b3
+exit_code=0
+
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-7b838c955100 Creating 
+ Container loja-stage3-20261023223148-app-run-7b838c955100 Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "c0dd7e3006e8105900aa7db3237f15fa842b5b61624d8b47a68515d3fcf8e215", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 11, "Order": 5, "OrderItem": 7, "SimulatedPayment": 3, "Shipment": 2}, "stocks": {"DEMO-CADERNO": 26, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/auth/token/: 200; esperado=200; OK
+HTTP POST /api/auth/token/: 200; esperado=200; OK
+HTTP POST /api/auth/token/: 200; esperado=200; OK
+HTTP POST /api/orders/: 201; esperado=201; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-01b6d0c4296a Creating 
+ Container loja-stage3-20261023223148-app-run-01b6d0c4296a Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "e98b70d54908a188432ef737f12d039ec9e23677161f5fbbca4b57a8ef6763db", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 3, "Shipment": 2}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/6/simulated-payment/: 401; esperado=401; OK
+HTTP POST /api/orders/6/simulated-payment/: 403; esperado=403; OK
+HTTP POST /api/orders/6/simulated-payment/: 400; esperado=400; OK
+HTTP POST /api/orders/6/cancel/: 404; esperado=404; OK
+HTTP POST /api/orders/9223372036854775807/cancel/: 404; esperado=404; OK
+HTTP POST /api/orders/6/cancel/: 403; esperado=403; OK
+HTTP POST /api/orders/6/ship/: 409; esperado=409; OK
+HTTP POST /api/orders/6/deliver/: 409; esperado=409; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-8a06815cb1a6 Creating 
+ Container loja-stage3-20261023223148-app-run-8a06815cb1a6 Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "e98b70d54908a188432ef737f12d039ec9e23677161f5fbbca4b57a8ef6763db", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 3, "Shipment": 2}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/6/simulated-payment/: 200; esperado=200; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-cfb16751a6ef Creating 
+ Container loja-stage3-20261023223148-app-run-cfb16751a6ef Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "0d7cc87fce5e75ee3b09c5b8e538dce512fa1884db9dad9f11311eaeb6b5c21c", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 4, "Shipment": 2}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/6/simulated-payment/: 200; esperado=200; OK
+HTTP POST /api/orders/6/cancel/: 409; esperado=409; OK
+HTTP POST /api/orders/6/deliver/: 409; esperado=409; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-b29331d630fe Creating 
+ Container loja-stage3-20261023223148-app-run-b29331d630fe Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "0d7cc87fce5e75ee3b09c5b8e538dce512fa1884db9dad9f11311eaeb6b5c21c", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 4, "Shipment": 2}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/6/ship/: 200; esperado=200; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-885ea50c8054 Creating 
+ Container loja-stage3-20261023223148-app-run-885ea50c8054 Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "5be09e8c46990785dff3a3978f4a35d068aa14efa7beba6dce21adc42d123daa", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 4, "Shipment": 3}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/6/ship/: 200; esperado=200; OK
+HTTP POST /api/orders/6/ship/: 409; esperado=409; OK
+HTTP POST /api/orders/6/simulated-payment/: 200; esperado=200; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-d2f57fe1258f Creating 
+ Container loja-stage3-20261023223148-app-run-d2f57fe1258f Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "5be09e8c46990785dff3a3978f4a35d068aa14efa7beba6dce21adc42d123daa", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 4, "Shipment": 3}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/6/deliver/: 200; esperado=200; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-49c795362268 Creating 
+ Container loja-stage3-20261023223148-app-run-49c795362268 Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "fe723915de44e66739de043444d619ba93c5b0a53ef371c4f6825603ae1d693c", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 4, "Shipment": 3}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/6/deliver/: 200; esperado=200; OK
+HTTP POST /api/orders/6/ship/: 200; esperado=200; OK
+HTTP POST /api/orders/6/simulated-payment/: 200; esperado=200; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-18b3ca383474 Creating 
+ Container loja-stage3-20261023223148-app-run-18b3ca383474 Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "fe723915de44e66739de043444d619ba93c5b0a53ef371c4f6825603ae1d693c", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 12, "Order": 6, "OrderItem": 8, "SimulatedPayment": 4, "Shipment": 3}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/: 201; esperado=201; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-0452139331b0 Creating 
+ Container loja-stage3-20261023223148-app-run-0452139331b0 Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "51999fdca5f6918ba212528d2f516969575c7e4f5ac10f908910241fb28febdd", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 13, "Order": 7, "OrderItem": 9, "SimulatedPayment": 4, "Shipment": 3}, "stocks": {"DEMO-CADERNO": 21, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/7/cancel/: 200; esperado=200; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-a1f6de40c898 Creating 
+ Container loja-stage3-20261023223148-app-run-a1f6de40c898 Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "edb7c9411979a21ea823664956180131ddba267a30c7a09caa32dfbae21cc2d2", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 14, "Order": 7, "OrderItem": 9, "SimulatedPayment": 4, "Shipment": 3}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+HTTP POST /api/orders/7/cancel/: 200; esperado=200; OK
+HTTP POST /api/orders/7/simulated-payment/: 409; esperado=409; OK
+$ docker compose run --rm -e PGDATABASE=loja_stage6_http_20261024124449 app shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-c41bf15c23bf Creating 
+ Container loja-stage3-20261023223148-app-run-c41bf15c23bf Created 
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "edb7c9411979a21ea823664956180131ddba267a30c7a09caa32dfbae21cc2d2", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 14, "Order": 7, "OrderItem": 9, "SimulatedPayment": 4, "Shipment": 3}, "stocks": {"DEMO-CADERNO": 23, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+Fluxo HTTP SIMULADO: pedido 77.70 entregue, um pagamento/entrega novos, saldo 26 -> 23 sem segundo desconto. OK
+Cancelamento HTTP: pedido 51.80, saldo 23 -> 21 -> 23, uma liberacao +2; repeticoes sem mudancas. OK
+$ docker stop --time 5 loja-stage6-http-20261024124449
+Flag --time has been deprecated, use --timeout instead
+loja-stage6-http-20261024124449
+exit_code=0
+
+$ docker compose run --rm app shell -c from django.db import connection; cursor=connection.cursor(); cursor.execute('DROP DATABASE '+connection.ops.quote_name('loja_stage6_http_20261024124449')); cursor.close()
+ Container loja-stage3-20261023223148-db-1 Running 
+ Container loja-stage3-20261023223148-db-1 Waiting 
+ Container loja-stage3-20261023223148-db-1 Healthy 
+ Container loja-stage3-20261023223148-app-run-129e10113edd Creating 
+ Container loja-stage3-20261023223148-app-run-129e10113edd Created 
+12 objects imported automatically (use -v 2 for details).
+
+exit_code=0
+
+$ docker compose exec -T app python manage.py shell -c import hashlib,json; from django.core import serializers; from accounts.models import User,Customer; from catalog.models import Product; from inventory.models import Stock,StockMovement; from orders.models import Order,OrderItem,SimulatedPayment,Shipment; from django.db.models import Sum; models=(User,Customer,Product,Stock,StockMovement,Order,OrderItem,SimulatedPayment,Shipment); raw=''.join(serializers.serialize('json',m.objects.order_by('pk')) for m in models); result={'sha256':hashlib.sha256(raw.encode()).hexdigest(),'counts':{m.__name__:m.objects.count() for m in models},'stocks':dict(Stock.objects.order_by('product__sku').values_list('product__sku','available_quantity')),'products':dict(Product.objects.values_list('sku','pk')),'customers':dict(Customer.objects.values_list('user__email','pk')),'ledger_matches':all(s.available_quantity==s.product.movements.aggregate(total=Sum('quantity_delta'))['total'] for s in Stock.objects.all())}; print('SMOKE_STATE='+json.dumps(result))
+12 objects imported automatically (use -v 2 for details).
+
+SMOKE_STATE={"sha256": "013f437a83e0cea887b3cff4ab81939c2fb4b8d5767d6f3068f6067a43df0483", "counts": {"User": 4, "Customer": 3, "Product": 3, "Stock": 3, "StockMovement": 11, "Order": 5, "OrderItem": 7, "SimulatedPayment": 3, "Shipment": 2}, "stocks": {"DEMO-CADERNO": 26, "DEMO-CANECA": 17, "DEMO-CANETA": 45}, "products": {"DEMO-CADERNO": 1, "DEMO-CANECA": 2, "DEMO-CANETA": 3}, "customers": {"cliente1.demo@example.com": 1, "cliente2.demo@example.com": 2, "cliente3.demo@example.com": 3}, "ledger_matches": true}
+exit_code=0
+
+Dataset principal identico antes/depois. Container e banco exclusivos desta verificacao removidos. OK
+

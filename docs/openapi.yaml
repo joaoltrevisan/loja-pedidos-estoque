@@ -1,0 +1,3344 @@
+openapi: 3.0.3
+info:
+  title: Loja ficticia — pedidos e estoque
+  version: 0.7.0
+  description: API de portfolio. Dados ficticios; pagamentos SIMULADOS, SEM COBRANCA
+    REAL. Relatorios permanecem na Etapa 8. Use login, copie access e clique Authorize
+    (Bearer).
+paths:
+  /api/auth/me/:
+    get:
+      operationId: auth_me_retrieve
+      description: 'Perfil autorizado: usuario autenticado. '
+      summary: Consultar perfil proprio
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    id: 1
+                    email: cliente@example.com
+                    name: Cliente Ficticio
+                    phone: '11900000000'
+                    role: customer
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+    patch:
+      operationId: auth_me_partial_update
+      description: 'Perfil autorizado: usuario autenticado. '
+      summary: Atualizar perfil proprio
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileUpdateRequest'
+            examples:
+              ContatoFicticio:
+                value:
+                  name: Nome Ficticio
+                  phone: '11900000001'
+                summary: Contato ficticio
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    id: 1
+                    email: cliente@example.com
+                    name: Cliente Ficticio
+                    phone: '11900000000'
+                    role: customer
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      description: 'Perfil autorizado: publico. Nao aceita privilegios administrativos.
+        Limite: 5/min por IP.'
+      summary: Cadastrar cliente
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+            examples:
+              ClienteFicticio:
+                value:
+                  email: cliente@example.com
+                  name: Cliente Ficticio
+                  password: Exemplo-Ficticio-731!
+                  phone: '11900000000'
+                summary: Cliente ficticio
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    id: 1
+                    email: cliente@example.com
+                    name: Cliente Ficticio
+                    phone: '11900000000'
+                    role: customer
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/auth/token/:
+    post:
+      operationId: auth_token_create
+      description: 'Perfil autorizado: publico. Access dura 5 min; refresh dura 1
+        dia. Limite: 20/min por IP.'
+      summary: Obter tokens JWT
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              LoginFicticio:
+                value:
+                  email: cliente@example.com
+                  password: Exemplo-Ficticio-731!
+                summary: Login ficticio
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    access: ACCESS_GERADO_LOCALMENTE
+                    refresh: REFRESH_GERADO_LOCALMENTE
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: 'Perfil autorizado: portador do refresh. Nao estende a validade
+        do refresh. Usuario removido, inativo ou com senha alterada perde a renovacao.
+        Limite: 60/min por IP.'
+      summary: Renovar access token
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiveUserRefreshRequest'
+            examples:
+              SubstituaORefresh:
+                value:
+                  refresh: COLE_SEU_REFRESH_LOCAL
+                summary: Substitua o refresh
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    access: ACCESS_GERADO_LOCALMENTE
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/orders/:
+    get:
+      operationId: orders_list
+      description: 'Perfil autorizado: cliente (proprios) ou administrador (todos).
+        status e exato; customer_id exclusivo de administradores. created_from inclusivo
+        e created_before exclusivo (ISO 8601, fuso America/Sao_Paulo quando omitido).
+        ordering: id, created_at, total, status. Pagina padrao 20; maximo 100.'
+      summary: Listar pedidos visiveis
+      parameters:
+      - in: query
+        name: created_before
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_from
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: customer_id
+        schema:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: id
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      - in: query
+        name: status
+        schema:
+          enum:
+          - PENDING_PAYMENT
+          - PAID
+          - SHIPPED
+          - DELIVERED
+          - CANCELLED
+          type: string
+          minLength: 1
+        description: |-
+          * `PENDING_PAYMENT` - Aguardando pagamento
+          * `PAID` - Pago (simulado)
+          * `SHIPPED` - Enviado
+          * `DELIVERED` - Entregue
+          * `CANCELLED` - Cancelado
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderDetailList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - id: 1
+                      customer_id: 1
+                      status: PENDING_PAYMENT
+                      currency: BRL
+                      total: '11.80'
+                      shipping_address:
+                        recipient: Cliente Ficticio
+                        street: Rua Imaginaria
+                        number: '123'
+                        district: Bairro Modelo
+                        city: Sao Paulo
+                        state: SP
+                        postal_code: '01001000'
+                        complement: ''
+                        country: BR
+                      items:
+                      - product_id: 1
+                        product_sku: DEMO-PEN-001
+                        product_name: Caneta Ficticia
+                        quantity: 2
+                        unit_price: '5.90'
+                        subtotal: '11.80'
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      updated_at: '2026-01-15T10:00:00-03:00'
+                      paid_at: null
+                      cancelled_at: null
+                      shipped_at: null
+                      delivered_at: null
+                      payment_mode: SIMULATED_NO_REAL_CHARGE
+                      simulated_payment: null
+                      shipment: null
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+    post:
+      operationId: orders_create
+      description: 'Perfil autorizado: cliente. De 1 a 100 produtos distintos, quantity
+        inteiro JSON de 1 a 9999. Dono, preco, total e status definidos no servidor.
+        Endereco brasileiro copiado para o historico. Nenhum pagamento real. POST
+        repetido cria outro pedido; sem expiracao automatica.'
+      summary: Criar pedido e reservar estoque
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+            examples:
+              CompraFicticia:
+                value:
+                  items:
+                  - product_id: 1
+                    quantity: 2
+                  shipping_address:
+                    recipient: Cliente Ficticio
+                    street: Rua Imaginaria
+                    number: '123'
+                    district: Bairro Modelo
+                    city: Sao Paulo
+                    state: SP
+                    postal_code: '01001000'
+                summary: Compra ficticia
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+              examples:
+                PedidoPendente:
+                  value:
+                    id: 1
+                    customer_id: 1
+                    status: PENDING_PAYMENT
+                    currency: BRL
+                    total: '11.80'
+                    shipping_address:
+                      recipient: Cliente Ficticio
+                      street: Rua Imaginaria
+                      number: '123'
+                      district: Bairro Modelo
+                      city: Sao Paulo
+                      state: SP
+                      postal_code: '01001000'
+                      complement: ''
+                      country: BR
+                    items:
+                    - product_id: 1
+                      product_sku: DEMO-PEN-001
+                      product_name: Caneta Ficticia
+                      quantity: 2
+                      unit_price: '5.90'
+                      subtotal: '11.80'
+                    created_at: '2026-01-15T10:00:00-03:00'
+                    updated_at: '2026-01-15T10:00:00-03:00'
+                    paid_at: null
+                    cancelled_at: null
+                    shipped_at: null
+                    delivered_at: null
+                    payment_mode: SIMULATED_NO_REAL_CHARGE
+                  summary: Pedido pendente
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/orders/{order_id}/:
+    get:
+      operationId: orders_retrieve
+      description: 'Perfil autorizado: cliente (proprio) ou administrador. Pedido
+        alheio e inexistente retornam o mesmo 404. Inclui pagamento SIMULADO e envio
+        quando existentes.'
+      summary: Consultar pedido visivel
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetail'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    id: 1
+                    customer_id: 1
+                    status: PENDING_PAYMENT
+                    currency: BRL
+                    total: '11.80'
+                    shipping_address:
+                      recipient: Cliente Ficticio
+                      street: Rua Imaginaria
+                      number: '123'
+                      district: Bairro Modelo
+                      city: Sao Paulo
+                      state: SP
+                      postal_code: '01001000'
+                      complement: ''
+                      country: BR
+                    items:
+                    - product_id: 1
+                      product_sku: DEMO-PEN-001
+                      product_name: Caneta Ficticia
+                      quantity: 2
+                      unit_price: '5.90'
+                      subtotal: '11.80'
+                    created_at: '2026-01-15T10:00:00-03:00'
+                    updated_at: '2026-01-15T10:00:00-03:00'
+                    paid_at: null
+                    cancelled_at: null
+                    shipped_at: null
+                    delivered_at: null
+                    payment_mode: SIMULATED_NO_REAL_CHARGE
+                    simulated_payment: null
+                    shipment: null
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/orders/{order_id}/cancel/:
+    post:
+      operationId: orders_cancel_create
+      description: 'Perfil autorizado: cliente dono. PENDING_PAYMENT -> CANCELLED.
+        Devolve a reserva uma unica vez. Repeticao em CANCELLED preserva estado e
+        saldo; pago retorna 409. Pedido alheio retorna 404. Operacao atomica; conflito
+        de historico retorna 409 sem reparo automatico.'
+      summary: Cancelar pedido pendente proprio
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderTransition'
+              examples:
+                TransicaoIlustrativa:
+                  value:
+                    order:
+                      id: 1
+                      customer_id: 1
+                      status: CANCELLED
+                      currency: BRL
+                      total: '11.80'
+                      shipping_address:
+                        recipient: Cliente Ficticio
+                        street: Rua Imaginaria
+                        number: '123'
+                        district: Bairro Modelo
+                        city: Sao Paulo
+                        state: SP
+                        postal_code: '01001000'
+                        complement: ''
+                        country: BR
+                      items:
+                      - product_id: 1
+                        product_sku: DEMO-PEN-001
+                        product_name: Caneta Ficticia
+                        quantity: 2
+                        unit_price: '5.90'
+                        subtotal: '11.80'
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      updated_at: '2026-01-15T11:00:00-03:00'
+                      paid_at: null
+                      cancelled_at: '2026-01-15T11:00:00-03:00'
+                      shipped_at: null
+                      delivered_at: null
+                      payment_mode: SIMULATED_NO_REAL_CHARGE
+                    simulated_payment: null
+                    shipment: null
+                  summary: Transicao ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/orders/{order_id}/deliver/:
+    post:
+      operationId: orders_deliver_create
+      description: 'Perfil autorizado: administrador. SHIPPED -> DELIVERED. Repeticao
+        preserva a data original. Nenhum efeito no estoque. Operacao atomica; conflito
+        de historico retorna 409 sem reparo automatico.'
+      summary: Registrar entrega
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderTransition'
+              examples:
+                TransicaoIlustrativa:
+                  value:
+                    order:
+                      id: 1
+                      customer_id: 1
+                      status: DELIVERED
+                      currency: BRL
+                      total: '11.80'
+                      shipping_address:
+                        recipient: Cliente Ficticio
+                        street: Rua Imaginaria
+                        number: '123'
+                        district: Bairro Modelo
+                        city: Sao Paulo
+                        state: SP
+                        postal_code: '01001000'
+                        complement: ''
+                        country: BR
+                      items:
+                      - product_id: 1
+                        product_sku: DEMO-PEN-001
+                        product_name: Caneta Ficticia
+                        quantity: 2
+                        unit_price: '5.90'
+                        subtotal: '11.80'
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      updated_at: '2026-01-16T12:00:00-03:00'
+                      paid_at: '2026-01-15T11:00:00-03:00'
+                      cancelled_at: null
+                      shipped_at: '2026-01-15T12:00:00-03:00'
+                      delivered_at: '2026-01-16T12:00:00-03:00'
+                      payment_mode: SIMULATED_NO_REAL_CHARGE
+                    simulated_payment:
+                      id: 1
+                      amount: '11.80'
+                      reference: 11111111-1111-4111-8111-111111111111
+                      approved_at: '2026-01-15T11:00:00-03:00'
+                      is_simulated: true
+                    shipment:
+                      id: 1
+                      tracking_code: SIMULATED-001
+                      shipped_at: '2026-01-15T12:00:00-03:00'
+                      delivered_at: '2026-01-16T12:00:00-03:00'
+                  summary: Transicao ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/orders/{order_id}/ship/:
+    post:
+      operationId: orders_ship_create
+      description: 'Perfil autorizado: administrador. PAID -> SHIPPED. Codigo opcional
+        ate 100 caracteres. Repetir em SHIPPED/DELIVERED exige o mesmo codigo normalizado
+        (omitir equivale a vazio); divergencia retorna 409. Mantem data original.
+        Operacao atomica; conflito de historico retorna 409 sem reparo automatico.'
+      summary: Registrar envio
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingActionRequest'
+            examples:
+              Acao:
+                value:
+                  tracking_code: SIMULATED-001
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderTransition'
+              examples:
+                TransicaoIlustrativa:
+                  value:
+                    order:
+                      id: 1
+                      customer_id: 1
+                      status: SHIPPED
+                      currency: BRL
+                      total: '11.80'
+                      shipping_address:
+                        recipient: Cliente Ficticio
+                        street: Rua Imaginaria
+                        number: '123'
+                        district: Bairro Modelo
+                        city: Sao Paulo
+                        state: SP
+                        postal_code: '01001000'
+                        complement: ''
+                        country: BR
+                      items:
+                      - product_id: 1
+                        product_sku: DEMO-PEN-001
+                        product_name: Caneta Ficticia
+                        quantity: 2
+                        unit_price: '5.90'
+                        subtotal: '11.80'
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      updated_at: '2026-01-15T12:00:00-03:00'
+                      paid_at: '2026-01-15T11:00:00-03:00'
+                      cancelled_at: null
+                      shipped_at: '2026-01-15T12:00:00-03:00'
+                      delivered_at: null
+                      payment_mode: SIMULATED_NO_REAL_CHARGE
+                    simulated_payment:
+                      id: 1
+                      amount: '11.80'
+                      reference: 11111111-1111-4111-8111-111111111111
+                      approved_at: '2026-01-15T11:00:00-03:00'
+                      is_simulated: true
+                    shipment:
+                      id: 1
+                      tracking_code: SIMULATED-001
+                      shipped_at: '2026-01-15T12:00:00-03:00'
+                      delivered_at: null
+                  summary: Transicao ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/orders/{order_id}/simulated-payment/:
+    post:
+      operationId: orders_simulated_payment_create
+      description: 'Perfil autorizado: administrador. PENDING_PAYMENT -> PAID. SEM
+        COBRANCA REAL. Valor vem do total historico; nenhum novo desconto de estoque.
+        Repeticoes em PAID/SHIPPED/DELIVERED preservam referencia e data. CANCELLED
+        retorna 409. Operacao atomica; conflito de historico retorna 409 sem reparo
+        automatico.'
+      summary: Confirmar pagamento SIMULADO
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderTransition'
+              examples:
+                TransicaoIlustrativa:
+                  value:
+                    order:
+                      id: 1
+                      customer_id: 1
+                      status: PAID
+                      currency: BRL
+                      total: '11.80'
+                      shipping_address:
+                        recipient: Cliente Ficticio
+                        street: Rua Imaginaria
+                        number: '123'
+                        district: Bairro Modelo
+                        city: Sao Paulo
+                        state: SP
+                        postal_code: '01001000'
+                        complement: ''
+                        country: BR
+                      items:
+                      - product_id: 1
+                        product_sku: DEMO-PEN-001
+                        product_name: Caneta Ficticia
+                        quantity: 2
+                        unit_price: '5.90'
+                        subtotal: '11.80'
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      updated_at: '2026-01-15T11:00:00-03:00'
+                      paid_at: '2026-01-15T11:00:00-03:00'
+                      cancelled_at: null
+                      shipped_at: null
+                      delivered_at: null
+                      payment_mode: SIMULATED_NO_REAL_CHARGE
+                    simulated_payment:
+                      id: 1
+                      amount: '11.80'
+                      reference: 11111111-1111-4111-8111-111111111111
+                      approved_at: '2026-01-15T11:00:00-03:00'
+                      is_simulated: true
+                    shipment: null
+                  summary: Transicao ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/products/:
+    get:
+      operationId: products_list
+      description: 'Perfil autorizado: cliente ou administrador. Clientes veem somente
+        ativos; is_active e exclusivo do administrador. search busca nome/SKU; sku
+        e exato. ordering: id, sku, name, price, created_at. Pagina padrao 20; page_size
+        de 1 a 100. Parametros desconhecidos/repetidos sao rejeitados.'
+      summary: Listar produtos
+      parameters:
+      - in: query
+        name: is_active
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: id
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+      - in: query
+        name: sku
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+      tags:
+      - products
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - id: 1
+                      sku: DEMO-PEN-001
+                      name: Caneta Ficticia
+                      price: '5.90'
+                      description: Produto de demonstracao.
+                      is_active: true
+                      available_quantity: 0
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      updated_at: '2026-01-15T10:00:00-03:00'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+    post:
+      operationId: products_create
+      description: 'Perfil autorizado: administrador. Saldo inicial zero; abasteca
+        pela rota de movimentos. Preco deve ser texto decimal positivo de ate duas
+        casas; descricao ate 5000 caracteres.'
+      summary: Criar produto com estoque zero
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInputRequest'
+            examples:
+              ProdutoFicticio:
+                value:
+                  sku: DEMO-PEN-001
+                  name: Caneta Ficticia
+                  price: '5.90'
+                  description: Produto de demonstracao.
+                  is_active: true
+                summary: Produto ficticio
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    id: 1
+                    sku: DEMO-PEN-001
+                    name: Caneta Ficticia
+                    price: '5.90'
+                    description: Produto de demonstracao.
+                    is_active: true
+                    available_quantity: 0
+                    created_at: '2026-01-15T10:00:00-03:00'
+                    updated_at: '2026-01-15T10:00:00-03:00'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/products/{product_id}/:
+    get:
+      operationId: products_retrieve
+      description: 'Perfil autorizado: cliente (ativo) ou administrador. '
+      summary: Consultar produto
+      parameters:
+      - in: path
+        name: product_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - products
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    id: 1
+                    sku: DEMO-PEN-001
+                    name: Caneta Ficticia
+                    price: '5.90'
+                    description: Produto de demonstracao.
+                    is_active: true
+                    available_quantity: 0
+                    created_at: '2026-01-15T10:00:00-03:00'
+                    updated_at: '2026-01-15T10:00:00-03:00'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+    patch:
+      operationId: products_partial_update
+      description: 'Perfil autorizado: administrador. PATCH parcial. is_active=false
+        preserva o historico; exclusao fisica nao e oferecida. Atualizacao bloqueia
+        o produto para estabilizar compras concorrentes.'
+      summary: Atualizar ou inativar produto
+      parameters:
+      - in: path
+        name: product_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductInputRequest'
+            examples:
+              NovoPreco:
+                value:
+                  price: '6.90'
+                summary: Novo preco
+              Inativacao:
+                value:
+                  is_active: false
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    id: 1
+                    sku: DEMO-PEN-001
+                    name: Caneta Ficticia
+                    price: '5.90'
+                    description: Produto de demonstracao.
+                    is_active: true
+                    available_quantity: 0
+                    created_at: '2026-01-15T10:00:00-03:00'
+                    updated_at: '2026-01-15T10:00:00-03:00'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/stock/:
+    get:
+      operationId: stock_list
+      description: 'Perfil autorizado: administrador. Filtros product_id e max_quantity
+        (inclusivo). ordering: id, product_id, available_quantity, updated_at. Pagina
+        padrao 20; maximo 100.'
+      summary: Listar saldos
+      parameters:
+      - in: query
+        name: max_quantity
+        schema:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: id
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      - in: query
+        name: product_id
+        schema:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+      tags:
+      - stock
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStockList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - product_id: 1
+                      sku: DEMO-PEN-001
+                      available_quantity: 20
+                      updated_at: '2026-01-15T10:00:00-03:00'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/stock/{product_id}/:
+    get:
+      operationId: stock_retrieve
+      description: 'Perfil autorizado: administrador. '
+      summary: Consultar saldo de um produto
+      parameters:
+      - in: path
+        name: product_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - stock
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    product_id: 1
+                    sku: DEMO-PEN-001
+                    available_quantity: 20
+                    updated_at: '2026-01-15T10:00:00-03:00'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/stock/{product_id}/movements/:
+    post:
+      operationId: stock_movements_create
+      description: 'Perfil autorizado: administrador. ENTRY exige delta positivo;
+        ADJUSTMENT admite positivo ou negativo, nunca zero. Justificativa obrigatoria
+        ate 500 caracteres. Saldo final entre 0 e 2147483647. Movimento e saldo confirmam
+        juntos. Repetir POST cria NOVO movimento; confira a auditoria antes de repetir
+        apos falha de rede. Ajustar disponibilidade nao altera reservas existentes.'
+      summary: Registrar entrada ou ajuste
+      parameters:
+      - in: path
+        name: product_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - stock
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockChangeRequest'
+            examples:
+              EntradaFicticia:
+                value:
+                  movement_type: ENTRY
+                  quantity_delta: 20
+                  reason: Abastecimento ficticio.
+                summary: Entrada ficticia
+              AjusteFicticio:
+                value:
+                  movement_type: ADJUSTMENT
+                  quantity_delta: -2
+                  reason: Correcao ficticia de contagem.
+                summary: Ajuste ficticio
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockChangeResult'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    stock:
+                      product_id: 1
+                      sku: DEMO-PEN-001
+                      available_quantity: 20
+                      updated_at: '2026-01-15T10:00:00-03:00'
+                    movement:
+                      id: 1
+                      product_id: 1
+                      order_id: null
+                      performed_by_id: 2
+                      movement_type: ENTRY
+                      quantity_delta: 20
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      reason: Abastecimento ficticio.
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+  /api/stock/movements/:
+    get:
+      operationId: stock_movements_list
+      description: 'Perfil autorizado: administrador. Filtros product_id, order_id
+        e movement_type. ordering: id, created_at, product_id. Registros somente de
+        leitura. Pagina padrao 20; maximo 100.'
+      summary: Auditar movimentos de estoque
+      parameters:
+      - in: query
+        name: movement_type
+        schema:
+          enum:
+          - ENTRY
+          - ADJUSTMENT
+          - RESERVATION
+          - RELEASE
+          type: string
+          minLength: 1
+        description: |-
+          * `ENTRY` - Entrada
+          * `ADJUSTMENT` - Ajuste
+          * `RESERVATION` - Reserva
+          * `RELEASE` - Liberacao
+      - in: query
+        name: order_id
+        schema:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: id
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      - in: query
+        name: product_id
+        schema:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+      tags:
+      - stock
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStockMovementList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - id: 1
+                      product_id: 1
+                      order_id: null
+                      performed_by_id: 2
+                      movement_type: ENTRY
+                      quantity_delta: 20
+                      created_at: '2026-01-15T10:00:00-03:00'
+                      reason: Abastecimento ficticio.
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ConflitoDeEstado:
+                  value:
+                    code: invalid_transition
+                    detail: Transicao nao permitida.
+                    errors: null
+                  summary: Conflito de estado
+          description: Conflito de estado, saldo, SKU ou integridade; nenhuma alteracao
+            parcial.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: API aceita apenas application/json no corpo.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Limite de requisicoes atingido; veja Retry-After.
+components:
+  schemas:
+    AccessToken:
+      type: object
+      properties:
+        access:
+          type: string
+      required:
+      - access
+    ActiveUserRefreshRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 4096
+      required:
+      - refresh
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+        detail:
+          type: string
+        errors:
+          nullable: true
+      required:
+      - code
+      - detail
+      - errors
+    LoginRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        email:
+          type: string
+          format: email
+          writeOnly: true
+          minLength: 1
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+      required:
+      - email
+      - password
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        currency:
+          type: string
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          readOnly: true
+        shipping_address:
+          type: object
+          properties:
+            recipient:
+              type: string
+            street:
+              type: string
+            number:
+              type: string
+            district:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postal_code:
+              type: string
+            complement:
+              type: string
+            country:
+              type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        shipped_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        payment_mode:
+          allOf:
+          - $ref: '#/components/schemas/PaymentModeEnum'
+          readOnly: true
+      required:
+      - cancelled_at
+      - created_at
+      - currency
+      - customer_id
+      - delivered_at
+      - id
+      - items
+      - paid_at
+      - payment_mode
+      - shipped_at
+      - shipping_address
+      - status
+      - total
+      - updated_at
+    OrderCreateRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemInputRequest'
+        shipping_address:
+          $ref: '#/components/schemas/ShippingAddressInputRequest'
+      required:
+      - items
+      - shipping_address
+    OrderDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        currency:
+          type: string
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          readOnly: true
+        shipping_address:
+          type: object
+          properties:
+            recipient:
+              type: string
+            street:
+              type: string
+            number:
+              type: string
+            district:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postal_code:
+              type: string
+            complement:
+              type: string
+            country:
+              type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        shipped_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        payment_mode:
+          allOf:
+          - $ref: '#/components/schemas/PaymentModeEnum'
+          readOnly: true
+        simulated_payment:
+          allOf:
+          - $ref: '#/components/schemas/SimulatedPayment'
+          readOnly: true
+          nullable: true
+        shipment:
+          allOf:
+          - $ref: '#/components/schemas/Shipment'
+          readOnly: true
+          nullable: true
+      required:
+      - cancelled_at
+      - created_at
+      - currency
+      - customer_id
+      - delivered_at
+      - id
+      - items
+      - paid_at
+      - payment_mode
+      - shipment
+      - shipped_at
+      - shipping_address
+      - simulated_payment
+      - status
+      - total
+      - updated_at
+    OrderItem:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          readOnly: true
+        product_sku:
+          type: string
+          readOnly: true
+        product_name:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          readOnly: true
+        unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - product_id
+      - product_name
+      - product_sku
+      - quantity
+      - subtotal
+      - unit_price
+    OrderItemInputRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        product_id:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+        quantity:
+          type: integer
+          maximum: 9999
+          minimum: 1
+      required:
+      - product_id
+      - quantity
+    OrderTransition:
+      type: object
+      properties:
+        order:
+          allOf:
+          - $ref: '#/components/schemas/Order'
+          readOnly: true
+        simulated_payment:
+          allOf:
+          - $ref: '#/components/schemas/SimulatedPayment'
+          readOnly: true
+          nullable: true
+        shipment:
+          allOf:
+          - $ref: '#/components/schemas/Shipment'
+          readOnly: true
+          nullable: true
+      required:
+      - order
+      - shipment
+      - simulated_payment
+    PaginatedOrderDetailList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDetail'
+    PaginatedProductList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    PaginatedStockList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stock'
+    PaginatedStockMovementList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockMovement'
+    PatchedProductInputRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        sku:
+          type: string
+          minLength: 1
+          maxLength: 64
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        price:
+          type: string
+          pattern: ^[0-9]{1,8}(\.[0-9]{1,2})?$
+          example: '25.90'
+        is_active:
+          type: boolean
+    PatchedProfileUpdateRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 20
+    PaymentModeEnum:
+      type: string
+      enum:
+      - SIMULATED_NO_REAL_CHARGE
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sku:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        is_active:
+          type: boolean
+          readOnly: true
+        available_quantity:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - available_quantity
+      - created_at
+      - description
+      - id
+      - is_active
+      - name
+      - price
+      - sku
+      - updated_at
+    ProductInputRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        sku:
+          type: string
+          minLength: 1
+          maxLength: 64
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        price:
+          type: string
+          pattern: ^[0-9]{1,8}(\.[0-9]{1,2})?$
+          example: '25.90'
+        is_active:
+          type: boolean
+      required:
+      - name
+      - price
+      - sku
+    Profile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        phone:
+          type: string
+          nullable: true
+          readOnly: true
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+      required:
+      - email
+      - id
+      - name
+      - phone
+      - role
+    RegistrationRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        phone:
+          type: string
+          maxLength: 20
+      required:
+      - email
+      - name
+      - password
+    RoleEnum:
+      type: string
+      enum:
+      - administrator
+      - customer
+      - unassigned
+    Shipment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tracking_code:
+          type: string
+          readOnly: true
+        shipped_at:
+          type: string
+          format: date-time
+          readOnly: true
+        delivered_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - delivered_at
+      - id
+      - shipped_at
+      - tracking_code
+    ShippingActionRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        tracking_code:
+          type: string
+          default: ''
+          maxLength: 100
+    ShippingAddressInputRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        recipient:
+          type: string
+          minLength: 1
+          maxLength: 150
+        street:
+          type: string
+          minLength: 1
+          maxLength: 200
+        number:
+          type: string
+          minLength: 1
+          maxLength: 20
+        complement:
+          type: string
+          maxLength: 100
+        district:
+          type: string
+          minLength: 1
+          maxLength: 100
+        city:
+          type: string
+          minLength: 1
+          maxLength: 100
+        state:
+          $ref: '#/components/schemas/StateEnum'
+        postal_code:
+          type: string
+          minLength: 1
+          pattern: ^[0-9]{8}$
+          maxLength: 8
+      required:
+      - city
+      - district
+      - number
+      - postal_code
+      - recipient
+      - state
+      - street
+    SimulatedPayment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+          readOnly: true
+        reference:
+          type: string
+          format: uuid
+          readOnly: true
+        approved_at:
+          type: string
+          format: date-time
+          readOnly: true
+        is_simulated:
+          type: boolean
+          readOnly: true
+      required:
+      - amount
+      - approved_at
+      - id
+      - is_simulated
+      - reference
+    StateEnum:
+      enum:
+      - AC
+      - AL
+      - AP
+      - AM
+      - BA
+      - CE
+      - DF
+      - ES
+      - GO
+      - MA
+      - MT
+      - MS
+      - MG
+      - PA
+      - PB
+      - PR
+      - PE
+      - PI
+      - RJ
+      - RN
+      - RS
+      - RO
+      - RR
+      - SC
+      - SP
+      - SE
+      - TO
+      type: string
+      description: |-
+        * `AC` - AC
+        * `AL` - AL
+        * `AP` - AP
+        * `AM` - AM
+        * `BA` - BA
+        * `CE` - CE
+        * `DF` - DF
+        * `ES` - ES
+        * `GO` - GO
+        * `MA` - MA
+        * `MT` - MT
+        * `MS` - MS
+        * `MG` - MG
+        * `PA` - PA
+        * `PB` - PB
+        * `PR` - PR
+        * `PE` - PE
+        * `PI` - PI
+        * `RJ` - RJ
+        * `RN` - RN
+        * `RS` - RS
+        * `RO` - RO
+        * `RR` - RR
+        * `SC` - SC
+        * `SP` - SP
+        * `SE` - SE
+        * `TO` - TO
+    StatusEnum:
+      enum:
+      - PENDING_PAYMENT
+      - PAID
+      - SHIPPED
+      - DELIVERED
+      - CANCELLED
+      type: string
+      description: |-
+        * `PENDING_PAYMENT` - Aguardando pagamento
+        * `PAID` - Pago (simulado)
+        * `SHIPPED` - Enviado
+        * `DELIVERED` - Entregue
+        * `CANCELLED` - Cancelado
+    Stock:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          readOnly: true
+        sku:
+          type: string
+          readOnly: true
+        available_quantity:
+          type: integer
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - available_quantity
+      - product_id
+      - sku
+      - updated_at
+    StockChangeMovementTypeEnum:
+      enum:
+      - ENTRY
+      - ADJUSTMENT
+      type: string
+      description: |-
+        * `ENTRY` - ENTRY
+        * `ADJUSTMENT` - ADJUSTMENT
+    StockChangeRequest:
+      type: object
+      description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
+      properties:
+        movement_type:
+          $ref: '#/components/schemas/StockChangeMovementTypeEnum'
+        quantity_delta:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483647
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+      required:
+      - movement_type
+      - quantity_delta
+      - reason
+    StockChangeResult:
+      type: object
+      properties:
+        stock:
+          $ref: '#/components/schemas/Stock'
+        movement:
+          $ref: '#/components/schemas/StockMovement'
+      required:
+      - movement
+      - stock
+    StockMovement:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product_id:
+          type: integer
+          readOnly: true
+        order_id:
+          type: integer
+          nullable: true
+          readOnly: true
+        performed_by_id:
+          type: integer
+          readOnly: true
+        movement_type:
+          allOf:
+          - $ref: '#/components/schemas/StockMovementMovementTypeEnum'
+          readOnly: true
+        quantity_delta:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        reason:
+          type: string
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - movement_type
+      - order_id
+      - performed_by_id
+      - product_id
+      - quantity_delta
+      - reason
+    StockMovementMovementTypeEnum:
+      enum:
+      - ENTRY
+      - ADJUSTMENT
+      - RESERVATION
+      - RELEASE
+      type: string
+      description: |-
+        * `ENTRY` - Entrada
+        * `ADJUSTMENT` - Ajuste
+        * `RESERVATION` - Reserva
+        * `RELEASE` - Liberacao
+    TokenPair:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

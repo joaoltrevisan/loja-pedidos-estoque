@@ -1,0 +1,2 @@
+# Logs de verificacao preservam os espacos emitidos pelas ferramentas.
+docs/*evidencias.txt -whitespace
