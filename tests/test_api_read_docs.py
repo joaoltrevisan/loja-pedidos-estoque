@@ -223,13 +223,23 @@ class ReadAndDocumentationTests(TestCase):
             "/api/orders/{order_id}/deliver/",
         ):
             self.assertIn(path, paths)
-        self.assertFalse(any("report" in path for path in paths))
+        for report in (
+            "revenue",
+            "average-ticket",
+            "top-products",
+            "top-customers",
+            "low-stock",
+            "orders-by-status",
+            "oldest-pending",
+        ):
+            self.assertIn(f"/api/reports/{report}/", paths)
         for path, methods in paths.items():
             for name, operation in methods.items():
                 self.assertIn("Perfil autorizado:", operation["description"], (path, name))
                 self.assertIn("400", operation["responses"])
                 self.assertIn("403", operation["responses"])
-                self.assertIn("409", operation["responses"])
+                if not path.startswith("/api/reports/"):
+                    self.assertIn("409", operation["responses"])
         self.assertIn("get", paths["/api/orders/"])
         self.assertIn("post", paths["/api/orders/"])
         self.assertEqual(schema["components"]["securitySchemes"]["jwtAuth"]["scheme"], "bearer")

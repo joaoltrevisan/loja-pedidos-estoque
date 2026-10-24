@@ -98,6 +98,7 @@ def operation(
     examples=None,
     description="",
     auth=None,
+    error_codes=None,
 ):
     errors = {
         code: OpenApiResponse(ERROR, text)
@@ -111,6 +112,7 @@ def operation(
             415: "API aceita apenas application/json no corpo.",
             429: "Limite de requisicoes atingido; veja Retry-After.",
         }.items()
+        if error_codes is None or code in error_codes
     }
     sample = success_example(response)
     examples = list(examples or [])
@@ -260,6 +262,9 @@ def request_example(name, value):
 
 
 def configure_schema():
+    from reports.schema import configure_report_schema
+
+    configure_report_schema()
     extend_schema_field(OrderItemSerializer(many=True))(OrderSerializer.get_items)
     extend_schema_field(
         {

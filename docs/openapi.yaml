@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
   title: Loja ficticia — pedidos e estoque
-  version: 0.7.0
+  version: 0.8.0
   description: API de portfolio. Dados ficticios; pagamentos SIMULADOS, SEM COBRANCA
-    REAL. Relatorios permanecem na Etapa 8. Use login, copie access e clique Authorize
-    (Bearer).
+    REAL. Relatorios exclusivos do administrador. Use login, copie access e clique
+    Authorize (Bearer).
 paths:
   /api/auth/me/:
     get:
@@ -1948,6 +1948,713 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Limite de requisicoes atingido; veja Retry-After.
+  /api/reports/average-ticket/:
+    get:
+      operationId: reports_average_ticket_retrieve
+      description: 'Perfil autorizado: administrador. start e end obrigatorios em
+        YYYY-MM-DD; periodo de 1 a 366 dias, inicio inclusivo e fim exclusivo, em
+        America/Sao_Paulo. Somente pagamentos SIMULADOS de pedidos PAID, SHIPPED ou
+        DELIVERED, pela aprovacao. Sem cobranca real ou apuracao fiscal. Soma dos
+        pagamentos / numero de pagamentos, com arredondamento HALF_UP para duas casas.
+        Conjunto vazio retorna 0.00 e contagem zero; itens nao multiplicam pagamentos.
+        Parametros desconhecidos/repetidos ou inteiros fora do formato sao rejeitados.'
+      summary: Ticket medio SIMULADO
+      parameters:
+      - in: query
+        name: end
+        schema:
+          type: string
+          format: date
+        required: true
+      - in: query
+        name: start
+        schema:
+          type: string
+          format: date
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AverageTicket'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    start: '2026-01-01'
+                    end: '2026-01-03'
+                    timezone: America/Sao_Paulo
+                    currency: BRL
+                    payment_mode: SIMULATED_NO_REAL_CHARGE
+                    notice: 'SIMULADO: sem cobranca real; nao e apuracao contabil
+                      ou fiscal.'
+                    total: '107.70'
+                    paid_orders: 2
+                    average_ticket: '53.85'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+  /api/reports/low-stock/:
+    get:
+      operationId: reports_low_stock_list
+      description: 'Perfil autorizado: administrador. threshold obrigatorio, inteiro
+        textual 0..2147483647. Saldo atual menor ou igual ao limite, somente produtos
+        ativos. ordering: product_id, available_quantity; padrao available_quantity,
+        desempate por product_id. Pagina padrao 20, page_size 1..100. Vazio retorna
+        results=[]. Parametros desconhecidos/repetidos ou inteiros fora do formato
+        sao rejeitados.'
+      summary: Produtos ativos com estoque baixo
+      parameters:
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: available_quantity
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      - in: query
+        name: threshold
+        schema:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLowStockList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - product_id: 1
+                      sku: REPORT-RENAMED
+                      name: Nome atual ficticio
+                      available_quantity: 5
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+  /api/reports/oldest-pending/:
+    get:
+      operationId: reports_oldest_pending_list
+      description: 'Perfil autorizado: administrador. Somente PENDING_PAYMENT criados
+        ate o instante da consulta. min_age_hours opcional, 0..87600 (padrao 0), idade
+        minima inclusiva. ordering: id, created_at, total; padrao created_at, desempate
+        por id. Pagina padrao 20, page_size 1..100. Nao expira nem cancela reservas.
+        Vazio retorna results=[]. Parametros desconhecidos/repetidos ou inteiros fora
+        do formato sao rejeitados.'
+      summary: Pedidos pendentes ha mais tempo
+      parameters:
+      - in: query
+        name: min_age_hours
+        schema:
+          type: integer
+          maximum: 87600
+          minimum: 0
+          default: 0
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: created_at
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPendingOrderList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - id: 5
+                      customer_id: 1
+                      created_at: '2026-01-03T10:00:00-03:00'
+                      total: '29.80'
+                      currency: BRL
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+  /api/reports/orders-by-status/:
+    get:
+      operationId: reports_orders_by_status_retrieve
+      description: 'Perfil autorizado: administrador. start e end obrigatorios, intervalo
+        inclusivo/exclusivo de 1..366 dias em America/Sao_Paulo. Filtra CRIACAO do
+        pedido, nao aprovacao do pagamento. Inclui os cinco estados, com zero onde
+        nao ha registros. Nao representa faturamento. Parametros desconhecidos/repetidos
+        ou inteiros fora do formato sao rejeitados.'
+      summary: Pedidos por estado atual
+      parameters:
+      - in: query
+        name: end
+        schema:
+          type: string
+          format: date
+        required: true
+      - in: query
+        name: start
+        schema:
+          type: string
+          format: date
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderStatusReport'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    start: '2026-01-01'
+                    end: '2026-02-01'
+                    timezone: America/Sao_Paulo
+                    date_basis: order_created_at
+                    total_orders: 4
+                    statuses:
+                    - status: PENDING_PAYMENT
+                      count: 1
+                    - status: PAID
+                      count: 1
+                    - status: SHIPPED
+                      count: 1
+                    - status: DELIVERED
+                      count: 0
+                    - status: CANCELLED
+                      count: 1
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+  /api/reports/revenue/:
+    get:
+      operationId: reports_revenue_retrieve
+      description: 'Perfil autorizado: administrador. start e end obrigatorios em
+        YYYY-MM-DD; periodo de 1 a 366 dias, inicio inclusivo e fim exclusivo, em
+        America/Sao_Paulo. Somente pagamentos SIMULADOS de pedidos PAID, SHIPPED ou
+        DELIVERED, pela aprovacao. Sem cobranca real ou apuracao fiscal. group_by=day
+        (padrao) ou month. Preenche periodos sem pagamento com zero. Meses parciais
+        somam somente o intervalo solicitado. Total e serie derivam do mesmo agregado
+        SQL. Parametros desconhecidos/repetidos ou inteiros fora do formato sao rejeitados.'
+      summary: Faturamento SIMULADO por dia ou mes
+      parameters:
+      - in: query
+        name: end
+        schema:
+          type: string
+          format: date
+        required: true
+      - in: query
+        name: group_by
+        schema:
+          enum:
+          - day
+          - month
+          type: string
+          default: day
+          minLength: 1
+        description: |-
+          * `day` - day
+          * `month` - month
+      - in: query
+        name: start
+        schema:
+          type: string
+          format: date
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueReport'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    start: '2026-01-01'
+                    end: '2026-01-03'
+                    timezone: America/Sao_Paulo
+                    currency: BRL
+                    payment_mode: SIMULATED_NO_REAL_CHARGE
+                    notice: 'SIMULADO: sem cobranca real; nao e apuracao contabil
+                      ou fiscal.'
+                    group_by: day
+                    total: '107.70'
+                    paid_orders: 2
+                    series:
+                    - period_start: '2026-01-01'
+                      amount: '77.70'
+                      paid_orders: 1
+                    - period_start: '2026-01-02'
+                      amount: '30.00'
+                      paid_orders: 1
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+  /api/reports/top-customers/:
+    get:
+      operationId: reports_top_customers_list
+      description: 'Perfil autorizado: administrador. start e end obrigatorios em
+        YYYY-MM-DD; periodo de 1 a 366 dias, inicio inclusivo e fim exclusivo, em
+        America/Sao_Paulo. Somente pagamentos SIMULADOS de pedidos PAID, SHIPPED ou
+        DELIVERED, pela aprovacao. Sem cobranca real ou apuracao fiscal. Soma pagamentos
+        por customer_id; nome atual, sem email ou endereco. ordering: customer_id,
+        paid_orders, simulated_revenue; padrao -simulated_revenue, desempate por customer_id.
+        Pagina padrao 20, page_size 1..100. Vazio retorna results=[]. Parametros desconhecidos/repetidos
+        ou inteiros fora do formato sao rejeitados.'
+      summary: Clientes com maior valor comprado SIMULADO
+      parameters:
+      - in: query
+        name: end
+        schema:
+          type: string
+          format: date
+        required: true
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: -simulated_revenue
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      - in: query
+        name: start
+        schema:
+          type: string
+          format: date
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCustomerRankingList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - customer_id: 1
+                      name: Cliente Ficticio
+                      paid_orders: 1
+                      simulated_revenue: '77.70'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
+  /api/reports/top-products/:
+    get:
+      operationId: reports_top_products_list
+      description: 'Perfil autorizado: administrador. start e end obrigatorios em
+        YYYY-MM-DD; periodo de 1 a 366 dias, inicio inclusivo e fim exclusivo, em
+        America/Sao_Paulo. Somente pagamentos SIMULADOS de pedidos PAID, SHIPPED ou
+        DELIVERED, pela aprovacao. Sem cobranca real ou apuracao fiscal. Soma unidades
+        e quantidade * preco historico. Inclui produtos hoje inativos; SKU/nome da
+        resposta sao os atuais, agrupando por product_id. ordering: product_id, units_sold,
+        simulated_revenue; padrao -units_sold, desempate por product_id. Pagina padrao
+        20, page_size 1..100. Vazio retorna results=[]. Parametros desconhecidos/repetidos
+        ou inteiros fora do formato sao rejeitados.'
+      summary: Produtos mais vendidos
+      parameters:
+      - in: query
+        name: end
+        schema:
+          type: string
+          format: date
+        required: true
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          minLength: 1
+          default: -units_sold
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+      - in: query
+        name: start
+        schema:
+          type: string
+          format: date
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductRankingList'
+              examples:
+                RespostaIlustrativa:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - product_id: 1
+                      sku: REPORT-RENAMED
+                      name: Nome atual ficticio
+                      units_sold: 4
+                      simulated_revenue: '107.50'
+                  summary: Resposta ilustrativa
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ErroDeValidacao:
+                  value:
+                    code: validation_error
+                    detail: Revise os campos informados.
+                    errors:
+                      quantity_delta:
+                      - Informe um inteiro JSON.
+                  summary: Erro de validacao
+          description: Entrada ou parametros invalidos; errors identifica campos.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Token ausente, expirado ou invalido.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Perfil sem permissao para a operacao.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Registro inexistente ou fora da visibilidade do usuario; pagina
+            inexistente.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Metodo nao permitido.
   /api/stock/:
     get:
       operationId: stock_list
@@ -2484,6 +3191,69 @@ components:
       - code
       - detail
       - errors
+    AverageTicket:
+      type: object
+      properties:
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date
+        timezone:
+          type: string
+        currency:
+          type: string
+        payment_mode:
+          type: string
+        notice:
+          type: string
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,38}(?:\.\d{0,2})?$
+        paid_orders:
+          type: integer
+        average_ticket:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,38}(?:\.\d{0,2})?$
+      required:
+      - average_ticket
+      - currency
+      - end
+      - notice
+      - paid_orders
+      - payment_mode
+      - start
+      - timezone
+      - total
+    CustomerRanking:
+      type: object
+      properties:
+        customer_id:
+          type: integer
+        name:
+          type: string
+        paid_orders:
+          type: integer
+        simulated_revenue:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,38}(?:\.\d{0,2})?$
+      required:
+      - customer_id
+      - name
+      - paid_orders
+      - simulated_revenue
+    GroupByEnum:
+      enum:
+      - day
+      - month
+      type: string
+      description: |-
+        * `day` - day
+        * `month` - month
     LoginRequest:
       type: object
       description: Campos desconhecidos ou somente de leitura nunca sao ignorados.
@@ -2502,6 +3272,22 @@ components:
       required:
       - email
       - password
+    LowStock:
+      type: object
+      properties:
+        product_id:
+          type: integer
+        sku:
+          type: string
+        name:
+          type: string
+        available_quantity:
+          type: integer
+      required:
+      - available_quantity
+      - name
+      - product_id
+      - sku
     Order:
       type: object
       properties:
@@ -2765,6 +3551,32 @@ components:
       required:
       - product_id
       - quantity
+    OrderStatusReport:
+      type: object
+      properties:
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date
+        timezone:
+          type: string
+        date_basis:
+          type: string
+        total_orders:
+          type: integer
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusCount'
+      required:
+      - date_basis
+      - end
+      - start
+      - statuses
+      - timezone
+      - total_orders
     OrderTransition:
       type: object
       properties:
@@ -2786,6 +3598,52 @@ components:
       - order
       - shipment
       - simulated_payment
+    PaginatedCustomerRankingList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerRanking'
+    PaginatedLowStockList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LowStock'
     PaginatedOrderDetailList:
       type: object
       required:
@@ -2809,6 +3667,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OrderDetail'
+    PaginatedPendingOrderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PendingOrder'
     PaginatedProductList:
       type: object
       required:
@@ -2832,6 +3713,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Product'
+    PaginatedProductRankingList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductRanking'
     PaginatedStockList:
       type: object
       required:
@@ -2919,6 +3823,28 @@ components:
       type: string
       enum:
       - SIMULATED_NO_REAL_CHARGE
+    PendingOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+        customer_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,14}(?:\.\d{0,2})?$
+        currency:
+          type: string
+      required:
+      - created_at
+      - currency
+      - customer_id
+      - id
+      - total
     Product:
       type: object
       properties:
@@ -2988,6 +3914,27 @@ components:
       - name
       - price
       - sku
+    ProductRanking:
+      type: object
+      properties:
+        product_id:
+          type: integer
+        sku:
+          type: string
+        name:
+          type: string
+        units_sold:
+          type: integer
+        simulated_revenue:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,38}(?:\.\d{0,2})?$
+      required:
+      - name
+      - product_id
+      - simulated_revenue
+      - sku
+      - units_sold
     Profile:
       type: object
       properties:
@@ -3040,6 +3987,62 @@ components:
       - email
       - name
       - password
+    RevenueBucket:
+      type: object
+      properties:
+        period_start:
+          type: string
+          format: date
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,38}(?:\.\d{0,2})?$
+        paid_orders:
+          type: integer
+      required:
+      - amount
+      - paid_orders
+      - period_start
+    RevenueReport:
+      type: object
+      properties:
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date
+        timezone:
+          type: string
+        currency:
+          type: string
+        payment_mode:
+          type: string
+        notice:
+          type: string
+        group_by:
+          $ref: '#/components/schemas/GroupByEnum'
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,38}(?:\.\d{0,2})?$
+        paid_orders:
+          type: integer
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/RevenueBucket'
+      required:
+      - currency
+      - end
+      - group_by
+      - notice
+      - paid_orders
+      - payment_mode
+      - series
+      - start
+      - timezone
+      - total
     RoleEnum:
       type: string
       enum:
@@ -3205,6 +4208,16 @@ components:
         * `SP` - SP
         * `SE` - SE
         * `TO` - TO
+    StatusCount:
+      type: object
+      properties:
+        status:
+          type: string
+        count:
+          type: integer
+      required:
+      - count
+      - status
     StatusEnum:
       enum:
       - PENDING_PAYMENT

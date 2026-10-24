@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     "catalog",
     "inventory",
     "orders",
+    "reports",
 ]
 MIDDLEWARE = []
 ROOT_URLCONF = "config.urls"
@@ -67,9 +68,10 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Loja ficticia — pedidos e estoque",
     "DESCRIPTION": (
         "API de portfolio. Dados ficticios; pagamentos SIMULADOS, SEM COBRANCA REAL. "
-        "Relatorios permanecem na Etapa 8. Use login, copie access e clique Authorize (Bearer)."
+        "Relatorios exclusivos do administrador. "
+        "Use login, copie access e clique Authorize (Bearer)."
     ),
-    "VERSION": "0.7.0",
+    "VERSION": "0.8.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
     "SERVE_AUTHENTICATION": [],

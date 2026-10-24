@@ -54,7 +54,7 @@ def query_params(request, serializer_class):
     return serializer.validated_data
 
 
-def ordered(queryset, value, allowed):
+def ordered(queryset, value, allowed, *, tie_breaker="id"):
     fields = value.split(",")
     if (
         len(fields) > 3
@@ -66,6 +66,6 @@ def ordered(queryset, value, allowed):
     ordering = [
         ("-" if field.startswith("-") else "") + allowed[field.lstrip("-")] for field in fields
     ]
-    if not any(field.lstrip("-") == "id" for field in ordering):
-        ordering.append("id")
+    if not any(field.lstrip("-") == tie_breaker for field in ordering):
+        ordering.append(tie_breaker)
     return queryset.order_by(*ordering)

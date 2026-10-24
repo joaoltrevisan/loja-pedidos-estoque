@@ -6,7 +6,7 @@ Código público: [joaoltrevisan/loja-pedidos-estoque](https://github.com/joaolt
 
 ## Entrega atual
 
-**Etapa 7: API operacional implementada, validada e aprovada em revisão técnica. Relatórios entram na Etapa 8.**
+**Etapa 8: relatórios de negócio implementados, verificados e aprovados em revisão técnica.**
 
 Leia [a definição do domínio](docs/etapa-01-dominio.md): regras, permissões, transições, relacionamentos, decisões de integridade, exemplos e critérios de verificação.
 
@@ -41,13 +41,13 @@ Código e identificadores serão escritos em inglês; explicações e documenta�
 | 4 | Autenticação e permissões | Aprovada no escopo definido; 79 testes; integração nos futuros endpoints pendente |
 | 5 | Criação transacional de pedidos | Aprovada; 109 testes locais e Docker; compra e rollback verificados |
 | 6 | Pagamento simulado, cancelamento e entrega | Aprovada em revisão; 152 testes locais e 152 no Docker |
-| 7 | API e documentação OpenAPI | Aprovada no escopo operacional; 191 testes locais e Docker; relatórios dependem da Etapa 8 |
-| 8 | Consultas de negócio | Em desenvolvimento; consultas em validação com conjunto pequeno conhecido |
+| 7 | API e documentação OpenAPI | Aprovada no escopo operacional; relatórios acrescentados na Etapa 8 |
+| 8 | Consultas de negócio | Aprovada em revisão; 228 testes locais e 228 no Docker |
 | 9 | Índices e medições de desempenho | Planejada |
 | 10 | Cobertura dos riscos e integração contínua | Planejada; testes pertinentes começam nas etapas anteriores |
 | 11 | Material de portfólio e demonstração | Planejada |
 
-Apenas o ambiente mínimo de validação com PostgreSQL foi antecipado na Etapa 2. A partir dela, cada entrega termina com arquivos, decisões, resultados reais e revisão técnica; a próxima etapa só começa após a revisão. A consulta de pedidos agora verifica o acesso do dono nas rotas reais. A [Etapa 7](docs/etapa-07-api.md) explica a API, os erros padronizados, as decisões e a dependência dos relatórios com a Etapa 8. O [pacote de revisão](docs/etapa-07-revisao.md) lista arquivos e evidências; o [parecer final](docs/etapa-07-parecer.md) registra a aprovação e a correção de paginação. A Etapa 8 não foi iniciada.
+Apenas o ambiente mínimo de validação com PostgreSQL foi antecipado na Etapa 2. A partir dela, cada entrega termina com arquivos, decisões, resultados reais e revisão técnica; a próxima etapa só começa após a revisão. A consulta de pedidos agora verifica o acesso do dono nas rotas reais. A [Etapa 7](docs/etapa-07-api.md) explica a API, os erros padronizados, as decisões e a dependência dos relatórios com a Etapa 8. O [pacote de revisão](docs/etapa-07-revisao.md) lista arquivos e evidências; o [parecer final](docs/etapa-07-parecer.md) registra a aprovação e a correção de paginação. A [Etapa 8](docs/etapa-08-relatorios.md) entrega as consultas e os endpoints de relatórios. O [pacote de revisão](docs/etapa-08-revisao.md) registra arquivos, critérios, testes e limites. A Etapa 9 não foi iniciada.
 
 ## Executar com Docker Compose
 
@@ -122,6 +122,10 @@ Não execute `seed_demo` novamente nesse volume: o comando recusará a base pree
 | Auditar movimentos (admin) | `GET /api/stock/movements/` |
 | Listar ou consultar pedidos visíveis | `GET /api/orders/`, `GET /api/orders/{id}/` |
 | Criar pedido e reservar estoque | `POST /api/orders/` |
+| Faturamento diário/mensal e ticket médio simulados (admin) | `GET /api/reports/revenue/`, `GET /api/reports/average-ticket/` |
+| Produtos e clientes com mais vendas simuladas (admin) | `GET /api/reports/top-products/`, `GET /api/reports/top-customers/` |
+| Estoque baixo (admin) | `GET /api/reports/low-stock/` |
+| Pedidos por status e pendências antigas (admin) | `GET /api/reports/orders-by-status/`, `GET /api/reports/oldest-pending/` |
 | Abrir Swagger UI / baixar contrato | `GET /api/docs/`, `GET /api/schema/` |
 | Confirmar pagamento simulado (admin) | `POST /api/orders/{id}/simulated-payment/` |
 | Cancelar pendente (cliente dono) | `POST /api/orders/{id}/cancel/` |
@@ -134,7 +138,9 @@ Criar pedido também exige token de cliente; informe somente `items` e `shipping
 
 As ações usam corpo `{}`, exceto envio, que aceita `tracking_code` opcional. Pagamento usa o total histórico do pedido e nunca desconta estoque novamente. Cancelamento só devolve a reserva de um pendente do próprio cliente. Repetir ações válidas preserva registros e datas; repetir envio exige o mesmo código. Veja [contrato, fluxos e exemplos da Etapa 6](docs/etapa-06-transicoes.md).
 
-A suíte atual tem **191 testes**, aprovados no PostgreSQL local e na imagem Docker Linux ARM64; os [resultados reais](docs/etapa-07-evidencias.txt) incluem nove cenários novos de concorrência, além dos dezoito de pedidos e transições, com espera observada no banco. Os tempos impressos são duração da suíte, não medição de desempenho da aplicação.
+Os relatórios financeiros usam pagamentos **simulados, sem cobrança real**, pela data de aprovação em `America/Sao_Paulo`. Não representam apuração contábil ou fiscal. Produtos vendidos usam o preço histórico; contagem por status usa criação do pedido. Consulte o [guia dos indicadores, filtros e exemplos](docs/etapa-08-relatorios.md).
+
+A suíte atual tem **228 testes**, aprovados no PostgreSQL local e na imagem Docker Linux ARM64. Os [resultados reais](docs/etapa-08-evidencias.txt) incluem verificações dos sete relatórios e dois novos cenários de leitura durante confirmação concorrente de pagamento, além dos testes de pedidos, transições e gestão de estoque anteriores. Os tempos impressos são duração da suíte, não medição de desempenho da aplicação.
 
 Abra a documentação interativa em [Swagger UI local](http://127.0.0.1:18003/api/docs/) no ambiente já preparado, ou use a porta `8000` na configuração padrão. O [OpenAPI exportado](docs/openapi.yaml) permite explorar o contrato sem executar a aplicação. Os exemplos são fictícios; tokens gerados localmente não devem ser publicados.
 
