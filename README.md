@@ -23,7 +23,6 @@ A [Etapa 6](docs/etapa-06-transicoes.md) acrescenta pagamento simulado, cancelam
 - Python, Django e Django REST Framework.
 - PostgreSQL, inclusive nos testes de integração e concorrência.
 - JWT com biblioteca mantida e compatível com o Django escolhido.
-- OpenAPI e Swagger UI.
 - Docker Compose para aplicação e banco.
 - GitHub Actions para as verificações automatizadas.
 
