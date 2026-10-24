@@ -6,7 +6,7 @@ Código público: [joaoltrevisan/loja-pedidos-estoque](https://github.com/joaolt
 
 ## Entrega atual
 
-**Etapa 9: índices e medições implementados, verificados e aprovados em revisão técnica.**
+**Etapa 10: testes e GitHub Actions com PostgreSQL implementados, verificados e aprovados em revisão técnica.**
 
 Leia [a definição do domínio](docs/etapa-01-dominio.md): regras, permissões, transições, relacionamentos, decisões de integridade, exemplos e critérios de verificação.
 
@@ -38,16 +38,16 @@ Código e identificadores serão escritos em inglês; explicações e documenta�
 | 1 | Domínio e fluxos | Documentada; revisão de consistência registrada |
 | 2 | Diagrama detalhado, modelos, migrations e restrições | Aprovada em revisão; 27 testes repetidos com êxito |
 | 3 | Ambiente reproduzível e dados fictícios | Concluída e aprovada; 41 testes em container com PostgreSQL |
-| 4 | Autenticação e permissões | Aprovada no escopo definido; 79 testes; integração nos futuros endpoints pendente |
+| 4 | Autenticação e permissões | Aprovada; 79 testes na entrega; integração nas rotas concluída nas etapas seguintes |
 | 5 | Criação transacional de pedidos | Aprovada; 109 testes locais e Docker; compra e rollback verificados |
 | 6 | Pagamento simulado, cancelamento e entrega | Aprovada em revisão; 152 testes locais e 152 no Docker |
 | 7 | API e documentação OpenAPI | Aprovada no escopo operacional; relatórios acrescentados na Etapa 8 |
 | 8 | Consultas de negócio | Aprovada em revisão; 228 testes locais e 228 no Docker |
 | 9 | Índices e medições de desempenho | Aprovada com correção da revisão; 248 testes locais e 248 no Docker |
-| 10 | Cobertura dos riscos e integração contínua | Planejada; testes pertinentes começam nas etapas anteriores |
+| 10 | Cobertura dos riscos e integração contínua | Aprovada; 251 testes locais, Docker e GitHub Actions |
 | 11 | Material de portfólio e demonstração | Planejada |
 
-Apenas o ambiente mínimo de validação com PostgreSQL foi antecipado na Etapa 2. A partir dela, cada entrega termina com arquivos, decisões, resultados reais e revisão técnica; a próxima etapa só começa após a revisão. A consulta de pedidos agora verifica o acesso do dono nas rotas reais. A [Etapa 7](docs/etapa-07-api.md) explica a API, os erros padronizados, as decisões e a dependência dos relatórios com a Etapa 8. O [pacote de revisão](docs/etapa-07-revisao.md) lista arquivos e evidências; o [parecer final](docs/etapa-07-parecer.md) registra a aprovação e a correção de paginação. A [Etapa 8](docs/etapa-08-relatorios.md) entrega as consultas e os endpoints de relatórios. O [pacote de revisão](docs/etapa-08-revisao.md) registra arquivos, critérios, testes e limites. A [Etapa 9](docs/etapa-09-desempenho.md) avalia sete consultas com 20 mil pedidos fictícios em banco separado, mantém dois índices justificados e registra casos sem ganho. Seu [pacote de revisão](docs/etapa-09-revisao.md) lista arquivos e verificações, e o [parecer final](docs/etapa-09-parecer.md) registra a aprovação e a correção da saída concorrente. A Etapa 10 não foi iniciada.
+Apenas o ambiente mínimo de validação com PostgreSQL foi antecipado na Etapa 2. A partir dela, cada entrega termina com arquivos, decisões, resultados reais e revisão técnica; a próxima etapa só começa após a revisão. A consulta de pedidos agora verifica o acesso do dono nas rotas reais. A [Etapa 7](docs/etapa-07-api.md) explica a API, os erros padronizados, as decisões e a dependência dos relatórios com a Etapa 8. O [pacote de revisão](docs/etapa-07-revisao.md) lista arquivos e evidências; o [parecer final](docs/etapa-07-parecer.md) registra a aprovação e a correção de paginação. A [Etapa 8](docs/etapa-08-relatorios.md) entrega as consultas e os endpoints de relatórios. O [pacote de revisão](docs/etapa-08-revisao.md) registra arquivos, critérios, testes e limites. A [Etapa 9](docs/etapa-09-desempenho.md) avalia sete consultas com 20 mil pedidos fictícios em banco separado, mantém dois índices justificados e registra casos sem ganho. Seu [pacote de revisão](docs/etapa-09-revisao.md) lista arquivos e verificações, e o [parecer final](docs/etapa-09-parecer.md) registra a aprovação e a correção da saída concorrente. A [Etapa 10](docs/etapa-10-testes-ci.md) mapeia os riscos aos testes e acrescenta concorrência pela API e GitHub Actions com PostgreSQL. Seu [pacote de revisão](docs/etapa-10-revisao.md) registra arquivos e critérios; o [parecer final](docs/etapa-10-parecer.md) confirma o fechamento. A [CI do commit de implementação](https://github.com/joaoltrevisan/loja-pedidos-estoque/actions/runs/40135509840) passou com os 251 testes e demais verificações. A Etapa 11 não foi iniciada.
 
 ## Executar com Docker Compose
 
@@ -140,7 +140,7 @@ As ações usam corpo `{}`, exceto envio, que aceita `tracking_code` opcional. P
 
 Os relatórios financeiros usam pagamentos **simulados, sem cobrança real**, pela data de aprovação em `America/Sao_Paulo`. Não representam apuração contábil ou fiscal. Produtos vendidos usam o preço histórico; contagem por status usa criação do pedido. Consulte o [guia dos indicadores, filtros e exemplos](docs/etapa-08-relatorios.md).
 
-A suíte atual tem **248 testes**, aprovados no PostgreSQL local e na imagem Docker Linux ARM64. Os [resultados reais](docs/etapa-09-evidencias.txt) incluem 20 testes novos do experimento e todas as verificações anteriores. Os tempos da suíte não são medidas de desempenho da aplicação. O [relatório de desempenho](docs/etapa-09-desempenho.md) separa planos e tempos SQL da contagem de consultas HTTP e registra seus limites.
+A suíte atual tem **251 testes**, aprovados no PostgreSQL local e na imagem Docker Linux ARM64. Os [resultados reais](docs/etapa-10-evidencias.txt) incluem três testes concorrentes novos pela API e todas as verificações anteriores. Os tempos da suíte não são medidas de desempenho da aplicação. O [relatório de desempenho](docs/etapa-09-desempenho.md) separa planos e tempos SQL da contagem de consultas HTTP e registra seus limites.
 
 Abra a documentação interativa em [Swagger UI local](http://127.0.0.1:18003/api/docs/) no ambiente já preparado, ou use a porta `8000` na configuração padrão. O [OpenAPI exportado](docs/openapi.yaml) permite explorar o contrato sem executar a aplicação. Os exemplos são fictícios; tokens gerados localmente não devem ser publicados.
 
