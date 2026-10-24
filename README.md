@@ -1,12 +1,12 @@
-# Loja fictícia: pedidos e estoque
+# Loja: pedidos e estoque
 
-Desenvolvo este projeto pessoal de portfólio para aprofundar meus conhecimentos em desenvolvimento back-end e modelagem de banco de dados. A loja, os clientes e as operações de demonstração serão fictícios. **Todos os pagamentos serão simulados, sem cobrança real.**
+Projeto pessoal para desenvolvimento back-end e modelagem de banco de dados.
 
 Código público: [joaoltrevisan/loja-pedidos-estoque](https://github.com/joaoltrevisan/loja-pedidos-estoque). O [registro de publicação](docs/publicacao-github.md) explica o que foi enviado e as verificações de privacidade. A aplicação é executada localmente; não há deploy público.
 
 ## Entrega atual
 
-**Etapa 7: API operacional e OpenAPI implementados, validados e aprovados em revisão técnica. Relatórios entram na Etapa 8.**
+**Etapa 7: API operacional implementada, validada e aprovada em revisão técnica. Relatórios entram na Etapa 8.**
 
 Leia [a definição do domínio](docs/etapa-01-dominio.md): regras, permissões, transições, relacionamentos, decisões de integridade, exemplos e critérios de verificação.
 
@@ -151,8 +151,4 @@ cd loja-pedidos-estoque
 
 Para preparar a validação em outro ambiente ou usar um PostgreSQL existente, siga as [instruções completas](docs/etapa-02-validacao.md). A chave pública da configuração `test` é exclusiva de testes. A configuração `development` exige `DJANGO_SECRET_KEY` definido no ambiente.
 
-## Limites desta versão
-
-Sem interface gráfica, pagamentos reais, múltiplos depósitos, cupons, devoluções, reembolsos ou microsserviços. Reservas não expiram automaticamente. Pedidos pagos não podem ser cancelados. Relatórios de pagamentos simulados não constituem apuração contábil ou fiscal.
-
-Mantenho o código do meu projeto em repositório público. Não há deploy público da aplicação. Antes de enviar, execute `python3 scripts/check_publication.py`: `.env`, dados/bancos locais e ambientes virtuais ficam fora do Git. Caminhos pessoais das evidências históricas foram anonimizados, preservando os resultados dos testes. Os commits usam email `noreply` do GitHub.
+Não há deploy público da aplicação. Antes de enviar, execute `python3 scripts/check_publication.py`: `.env`, dados/bancos locais e ambientes virtuais ficam fora do Git. Caminhos pessoais das evidências históricas foram anonimizados, preservando os resultados dos testes. Os commits usam email `noreply` do GitHub.
