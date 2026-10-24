@@ -42,7 +42,7 @@ Código e identificadores serão escritos em inglês; explicações e documenta�
 | 5 | Criação transacional de pedidos | Aprovada; 109 testes locais e Docker; compra e rollback verificados |
 | 6 | Pagamento simulado, cancelamento e entrega | Aprovada em revisão; 152 testes locais e 152 no Docker |
 | 7 | API e documentação OpenAPI | Aprovada no escopo operacional; 191 testes locais e Docker; relatórios dependem da Etapa 8 |
-| 8 | Consultas de negócio | Planejada |
+| 8 | Consultas de negócio | Em desenvolvimento; consultas em validação com conjunto pequeno conhecido |
 | 9 | Índices e medições de desempenho | Planejada |
 | 10 | Cobertura dos riscos e integração contínua | Planejada; testes pertinentes começam nas etapas anteriores |
 | 11 | Material de portfólio e demonstração | Planejada |
