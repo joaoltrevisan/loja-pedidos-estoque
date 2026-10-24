@@ -75,6 +75,7 @@ jobs:
           python -m pip check
           ruff check .
           ruff format --check .
+          bash -n examples/demonstracao.sh
       - name: Conferir modelos e aplicar migrations
         run: |
           python manage.py check
