@@ -6,7 +6,7 @@ Código público: [joaoltrevisan/loja-pedidos-estoque](https://github.com/joaolt
 
 ## Entrega atual
 
-**Etapa 8: relatórios de negócio implementados, verificados e aprovados em revisão técnica.**
+**Etapa 9: índices e medições implementados, verificados e aprovados em revisão técnica.**
 
 Leia [a definição do domínio](docs/etapa-01-dominio.md): regras, permissões, transições, relacionamentos, decisões de integridade, exemplos e critérios de verificação.
 
@@ -43,11 +43,11 @@ Código e identificadores serão escritos em inglês; explicações e documenta�
 | 6 | Pagamento simulado, cancelamento e entrega | Aprovada em revisão; 152 testes locais e 152 no Docker |
 | 7 | API e documentação OpenAPI | Aprovada no escopo operacional; relatórios acrescentados na Etapa 8 |
 | 8 | Consultas de negócio | Aprovada em revisão; 228 testes locais e 228 no Docker |
-| 9 | Índices e medições de desempenho | Planejada |
+| 9 | Índices e medições de desempenho | Aprovada com correção da revisão; 248 testes locais e 248 no Docker |
 | 10 | Cobertura dos riscos e integração contínua | Planejada; testes pertinentes começam nas etapas anteriores |
 | 11 | Material de portfólio e demonstração | Planejada |
 
-Apenas o ambiente mínimo de validação com PostgreSQL foi antecipado na Etapa 2. A partir dela, cada entrega termina com arquivos, decisões, resultados reais e revisão técnica; a próxima etapa só começa após a revisão. A consulta de pedidos agora verifica o acesso do dono nas rotas reais. A [Etapa 7](docs/etapa-07-api.md) explica a API, os erros padronizados, as decisões e a dependência dos relatórios com a Etapa 8. O [pacote de revisão](docs/etapa-07-revisao.md) lista arquivos e evidências; o [parecer final](docs/etapa-07-parecer.md) registra a aprovação e a correção de paginação. A [Etapa 8](docs/etapa-08-relatorios.md) entrega as consultas e os endpoints de relatórios. O [pacote de revisão](docs/etapa-08-revisao.md) registra arquivos, critérios, testes e limites. A Etapa 9 não foi iniciada.
+Apenas o ambiente mínimo de validação com PostgreSQL foi antecipado na Etapa 2. A partir dela, cada entrega termina com arquivos, decisões, resultados reais e revisão técnica; a próxima etapa só começa após a revisão. A consulta de pedidos agora verifica o acesso do dono nas rotas reais. A [Etapa 7](docs/etapa-07-api.md) explica a API, os erros padronizados, as decisões e a dependência dos relatórios com a Etapa 8. O [pacote de revisão](docs/etapa-07-revisao.md) lista arquivos e evidências; o [parecer final](docs/etapa-07-parecer.md) registra a aprovação e a correção de paginação. A [Etapa 8](docs/etapa-08-relatorios.md) entrega as consultas e os endpoints de relatórios. O [pacote de revisão](docs/etapa-08-revisao.md) registra arquivos, critérios, testes e limites. A [Etapa 9](docs/etapa-09-desempenho.md) avalia sete consultas com 20 mil pedidos fictícios em banco separado, mantém dois índices justificados e registra casos sem ganho. Seu [pacote de revisão](docs/etapa-09-revisao.md) lista arquivos e verificações, e o [parecer final](docs/etapa-09-parecer.md) registra a aprovação e a correção da saída concorrente. A Etapa 10 não foi iniciada.
 
 ## Executar com Docker Compose
 
@@ -140,7 +140,7 @@ As ações usam corpo `{}`, exceto envio, que aceita `tracking_code` opcional. P
 
 Os relatórios financeiros usam pagamentos **simulados, sem cobrança real**, pela data de aprovação em `America/Sao_Paulo`. Não representam apuração contábil ou fiscal. Produtos vendidos usam o preço histórico; contagem por status usa criação do pedido. Consulte o [guia dos indicadores, filtros e exemplos](docs/etapa-08-relatorios.md).
 
-A suíte atual tem **228 testes**, aprovados no PostgreSQL local e na imagem Docker Linux ARM64. Os [resultados reais](docs/etapa-08-evidencias.txt) incluem verificações dos sete relatórios e dois novos cenários de leitura durante confirmação concorrente de pagamento, além dos testes de pedidos, transições e gestão de estoque anteriores. Os tempos impressos são duração da suíte, não medição de desempenho da aplicação.
+A suíte atual tem **248 testes**, aprovados no PostgreSQL local e na imagem Docker Linux ARM64. Os [resultados reais](docs/etapa-09-evidencias.txt) incluem 20 testes novos do experimento e todas as verificações anteriores. Os tempos da suíte não são medidas de desempenho da aplicação. O [relatório de desempenho](docs/etapa-09-desempenho.md) separa planos e tempos SQL da contagem de consultas HTTP e registra seus limites.
 
 Abra a documentação interativa em [Swagger UI local](http://127.0.0.1:18003/api/docs/) no ambiente já preparado, ou use a porta `8000` na configuração padrão. O [OpenAPI exportado](docs/openapi.yaml) permite explorar o contrato sem executar a aplicação. Os exemplos são fictícios; tokens gerados localmente não devem ser publicados.
 
