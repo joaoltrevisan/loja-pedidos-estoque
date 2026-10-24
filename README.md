@@ -2,6 +2,8 @@
 
 Desenvolvo este projeto pessoal de portfólio para aprofundar meus conhecimentos em desenvolvimento back-end e modelagem de banco de dados. A loja, os clientes e as operações de demonstração serão fictícios. **Todos os pagamentos serão simulados, sem cobrança real.**
 
+Código público: [joaoltrevisan/loja-pedidos-estoque](https://github.com/joaoltrevisan/loja-pedidos-estoque). O [registro de publicação](docs/publicacao-github.md) explica o que foi enviado e as verificações de privacidade. A aplicação é executada localmente; não há deploy público.
+
 ## Entrega atual
 
 **Etapa 7: API operacional e OpenAPI implementados, validados e aprovados em revisão técnica. Relatórios entram na Etapa 8.**
@@ -50,6 +52,13 @@ Apenas o ambiente mínimo de validação com PostgreSQL foi antecipado na Etapa 
 ## Executar com Docker Compose
 
 Pré-requisito: Docker Engine em execução e `docker compose` disponível (por exemplo, Docker Desktop). O roteiro abaixo foi executado em projeto e volume novos, com Docker Desktop 4.96.3, Engine 29.9.2 e Compose 5.6.1.
+
+Para obter o código pela primeira vez:
+
+```bash
+git clone https://github.com/joaoltrevisan/loja-pedidos-estoque.git
+cd loja-pedidos-estoque
+```
 
 Na pasta do projeto, gere uma configuração local. O script usa somente a biblioteca padrão do Python 3, não exibe os segredos e não sobrescreve um `.env` existente. Se o arquivo já estiver preparado, preserve-o e comece pelo comando `docker compose config --quiet`:
 
